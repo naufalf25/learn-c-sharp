@@ -1,21 +1,20 @@
 ﻿static void FooBar(int n)
 {
+    List<object> results = [];
+
     for (int i = 1; i < n + 1; i++)
     {
         if (i % 3 == 0 && i % 5 == 0)
-            Console.Write("foobar" + LastCharacterCheck(i, n));
+            results.Add("foobar");
         else if (i % 3 == 0)
-            Console.Write("foo" + LastCharacterCheck(i, n));
+            results.Add("foo");
         else if (i % 5 == 0)
-            Console.Write("bar" + LastCharacterCheck(i, n));
+            results.Add("bar");
         else
-            Console.Write(i + LastCharacterCheck(i, n));
+            results.Add(i);
     }
-}
 
-static string LastCharacterCheck(int target, int length)
-{
-    return target != length ? ", " : "";
+    Console.WriteLine(string.Join(", ", results));
 }
 
 FooBar(15);
