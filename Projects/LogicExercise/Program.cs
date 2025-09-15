@@ -13,8 +13,11 @@
         else
             results.Add(i);
 
-        if (i == n && i % 7 == 0)
-            results[i - 1] += "jazz";
+        if (i % 7 == 0)
+            if (results[i - 1].GetType() == typeof(int))
+                results[i - 1] = "jazz";
+            else
+                results[i - 1] += "jazz";
     }
 
     Console.WriteLine(string.Join(", ", results));
