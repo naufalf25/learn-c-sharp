@@ -3,11 +3,11 @@ Console.WriteLine("\n---Define and Using Delegate---");
 
 static int Square(int x) => x * x; // method that match the delegate
 
-Transformer t = Square; // t nw points to the Square method
+Transformer t = Square; // t now points to the Square method
 // shorthand of Transformer t = new Transformer(Square);
 
 // invoke delegated instance
-int answer = t(3);
+int answer = t(3); // Shorthand of int answer = t.Invoke(3)
 Console.Write("The answer from t will be: ");
 Console.WriteLine(answer); // Output: 9
 
@@ -95,7 +95,7 @@ int[] values2 = { 1, 2, 3 };
 int[] values3 = { 1, 2, 3 };
 
 Console.WriteLine("The result of Generic Delegate Types is:");
-Util2.Transform(values2, Square); // using Square and values from above
+Util2.Transform(values2, Square); // using Square from above
 // Func delegate
 static void Transform2<T>(T[] values, Func<T, T> transformer)
 {

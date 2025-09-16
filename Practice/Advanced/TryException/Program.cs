@@ -576,6 +576,112 @@ static void MethodThatRetrows()
     }
 }
 
+// TryXXX Pattern
+Console.WriteLine("---TryXXX Pattern---");
+Console.WriteLine("Comparing exception-based vs TryParse approaches:");
+
+string[] testInputs = { "123", "abc", "999999999999", "45.67" };
+
+foreach (string input in testInputs)
+{
+    Console.WriteLine($"\nTesting input: '{input}'");
+
+    // Exception-based approach - expensive when failures are common
+    Console.WriteLine("  Exception-based approach:");
+    try
+    {
+        int result = int.Parse(input);
+        Console.WriteLine($"    ✔ Success: {result}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"    ❌ Failed: {ex.GetType().Name}");
+    }
+
+    // TryParse approach - efficient, no exceptions thrown
+    Console.WriteLine("  TryParse approach:");
+    if (int.TryParse(input, out int tryResult))
+    {
+        Console.WriteLine($"    ✔ Success: {tryResult}");
+    }
+    else
+    {
+        Console.WriteLine("    ❌ Failed: Invalid format or overflow");
+    }
+}
+
+// Demonstrate custom TryXXX method
+Console.WriteLine("\nCustom TryDivide method demonstration:");
+TestCustomTryMethod();
+
+Console.WriteLine("\n==================================================\n");
+
+static void TestCustomTryMethod()
+{
+    int[][] testCases = {
+        new int[] {10, 2},
+        new int[] {15, 3},
+        new int[] {7, 0}, // Division by zero case
+        new int[] {-20, 4}
+    };
+
+    foreach (var testCase in testCases)
+    {
+        int numerator = testCase[0];
+        int denominator = testCase[1];
+
+        Console.WriteLine($"  Testing {numerator} / {denominator}:");
+
+        // Using cutom TryDivide method
+        if (TryDivide(numerator, denominator, out int result))
+        {
+            Console.WriteLine($"    ✔ Success: {result}");
+        }
+        else
+        {
+            Console.WriteLine("    ❌ Failed: Division by zero not allowed");
+        }
+    }
+}
+
+// Cutom TryXXX method implementation
+static bool TryDivide(int numerator, int denominator, out int result)
+{
+    if (denominator == 0)
+    {
+        result = 0; // Set a default value
+        return false; // Indicates failure
+    }
+
+    result = numerator / denominator;
+    return true; // Indicates success
+}
+
+// Real World Scenario
+Console.WriteLine("---Real World Screnario - File Processing System---");
+
+var processor = new FileProcessor();
+
+Console.WriteLine("\nProcessing various file scenarios:\n");
+
+processor.ProcessFile("valid_data.txt");
+processor.ProcessFile(""); // Empty path
+processor.ProcessFile("nonexistent.txt"); // File not found
+processor.ProcessFile("corrupted.txt"); // Simulate corruption
+
+// Demonstrate the TryProcess alternative approach
+Console.WriteLine("\n Demonstrating TryProcess alternative:");
+if (processor.TryProcessFile("test.txt", out string? errorMessage))
+{
+    Console.WriteLine("  ✔ File processed successfully using TryProcess");
+}
+else
+{
+    Console.WriteLine($"  ❌ TryProcess failed: {errorMessage}");
+}
+
+Console.WriteLine("\n==================================================\n");
+
 
 // Helper class for demonstrating object state exceptions
 class DisposableDemo : IDisposable
@@ -608,4 +714,104 @@ public class InvalidDataException : Exception
 {
     public InvalidDataException(string message) : base(message) { }
     public InvalidDataException(string message, Exception innerException) : base(message, innerException) { }
+}
+
+// Real World File Processor
+public class FileProcessor
+{
+    public void ProcessFile(string filePath)
+    {
+        Console.WriteLine($"Processing file: '{filePath}'");
+        FileStream? fileStream = null;
+        StreamReader? reader = null;
+
+        try
+        {
+            // Validate input parameter
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("File path cannot be empty", nameof(filePath));
+
+            // Simulate different file conditions for demonstration
+            if (filePath == "nonexistent.txt")
+                throw new FileNotFoundException($"Could not find file: {filePath}");
+
+            if (filePath == "corrupted.txt")
+                throw new InvalidDataException("File appears to be corrupted or unreadable");
+
+            // Simulate successful file processing
+            Console.WriteLine("  ✔ File validation passed");
+            Console.WriteLine("  ✔ File opened successfully");
+            Console.WriteLine("  ✔ Data processed and validated");
+            Console.WriteLine("  ✔ Processing completed successfully");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"  ❌ Input validation Error: {ex.Message}");
+            LogError("ARGUMENT_ERROR", ex);
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine($"  ❌ File System Error: {ex.Message}");
+            LogError("FILE_NOT_FOUND", ex);
+        }
+        catch (InvalidDataException ex)
+        {
+            Console.WriteLine($"  ❌ Data Processing Error: {ex.Message}");
+            LogError("DATA_CORRUPTION", ex);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($"  ❌ Access Denied: {ex.Message}");
+            LogError("ACCESS_DENIED", ex);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"  ❌ Unexpected Error: {ex.Message}");
+            LogError("UNEXPECTED_ERROR", ex);
+            // In production, may rethrow unexpected exceptions
+            // throw;
+        }
+        finally
+        {
+            // Resource cleanup
+            Console.WriteLine("  ➡ Performing cleanup operations...");
+
+            // Dispose resource in reverse order of acquisition
+            reader?.Dispose();
+            fileStream?.Dispose();
+
+            Console.WriteLine("  ➡ Resource cleanup completed");
+        }
+
+        Console.WriteLine();
+    }
+
+    private void LogError(string errorType, Exception ex)
+    {
+        // Write loggin framework
+        // Like SeriLog, NLog, or Microsoft.Extension.Logging
+        var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        Console.WriteLine($"  ➡ [LOG] {timestamp} - {errorType}: {ex.Message}");
+
+        // Could also log stack trace for debugging
+        Console.WriteLine($"  → [LOG] Stack Trace: {ex.StackTrace}");
+    }
+
+    // Alternative TryProcess method - no exception thrown
+    // Return success/failure and provides error details vio out parameter
+    public bool TryProcessFile(string filePath, out string? errorMessage)
+    {
+        errorMessage = null;
+
+        try
+        {
+            ProcessFile(filePath);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+            return false;
+        }
+    }
 }
