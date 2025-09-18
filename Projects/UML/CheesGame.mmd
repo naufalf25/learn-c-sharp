@@ -1,3 +1,7 @@
+---
+config:
+  layout: elk
+---
 classDiagram
     CheesGame *-- Board
     CheesGame <.. Player
@@ -7,21 +11,15 @@ classDiagram
     CheesGame <.. GameRules
     CheesGame <.. Move
     CheesGame <.. EndGame
-
     Player *-- Color
     Player *-- PlayerType
     Player <|-- HumanPlayer
     Player <|-- AIPlayer
-
     DifficultLevel --* AIPlayer
-
     Position -- Move
     Position ..> CheesGame
-
     Move *-- MoveType
-
     Board o-- Piece
-
     Piece *-- PieceType
     Piece <|-- King
     Piece <|-- Queen
@@ -29,148 +27,123 @@ classDiagram
     Piece <|-- Bishop
     Piece <|-- Knight
     Piece <|-- Pawn
-
-
     class CheesGame {
       -string _id
       -int _moveCount
       -GameStatus _gameStatus
       -Player _currentPlayer
       -Board _board
-
       +StartGame() void
       +EndGame(GameResult result) void
       +MakeMove(Move move) void
       +IsCheck() void
       +IsCheckMate() void
     }
-
     class EndGame {
       +delegate EndGame(GameResult result) void
     }
-
     class Player {
       +int Id : readonly
       +string Name
       +PlayerType type
       +Color Color
-
       +MakeMove(Position startPosition, Position targetPosition) Move
       +OfferDraw() void
     }
-
     class HumanPlayer {
       -int _wins
-
       +SelectPiece(Position pos) Piece
       +ConfirmMove() boolean
     }
-
     class AIPlayer {
       -DifficultLevel _level
       -int _thinkingTime
-
       +ExecuteBestMove() Move
       +EvaluatePosition() int
     }
-
     class Board {
       -Piece[8][8] _squares
       -List~.Piece~ _capturedPieces
-
       +GenerateBoard() void
       +GetAllPieces() List~.Piece~
       +GetPiece(Position pos) Piece
       +SetPiece(Position pos) Piece
       +RemovePiece(Position pos) Piece
     }
-
     class Piece {
       <<abstract>>
       +string Id
       +string Name
       +string PieceType
-
       +GetValidMove(Board board) List~.Move~
       +GetColor() Color
       +GetPieceType() PieceType
       +CanMoveTo(Position pos, Board board) boolean
       +Move(Position newPosition) void
     }
-
     class King {
       -booleanean _inCheck
       +GetValidMove(Board board) List~.Move~
+      +IsCanCastle(Position pos, Board board) boolean
       +IsInCheck(Board board) boolean
     }
-
     class Queen {
       +GetValidMove(Board board) List~.Move~
       +CanMoveDiagonal(Position pos, Board board) boolean
       +CanMoveHorizontal(Position pos, Board board) boolean
       +CanMoveVertical(Position pos, Board board) boolean
     }
-
     class Rock {
       +GetValidMove(Board board) List~.Move~
       +CanMoveHorizontal(Position pos, Board board) boolean
       +CanMoveVertical(Position pos, Board board) boolean
     }
-
     class Bishop {
       +GetValidMove(Board board) List~.Move~
       +CanMoveDiagonal(Position pos, Board board) boolean
     }
-
     class Knight {
       +GetValidMove(Board board) List~.Move~
       +CanMoveLShapre(Position pos, Board, board) boolean
     }
-
     class Pawn {
       -boolean _pawnFirstMove
-
       +GetValidMove(Board board) List~.Move~
       +CanMoveForward(Position pos, Board board) boolean
       +CanCapture(Position pos, Board board) boolean
+      +IsCanPassant(Board board) boolean
       +CanPromote() boolean
     }
-
     class Position {
+      <<struct>>
       -int _row
       -int _column
-
       +Position(int _row, int _column)
       +IsValid() boolean
       +ToString() string
     }
-
     class Move {
       -Position _startPosition
       -Position _targetPosition
       -Piece _pieceType
       -MoveType _type
-
       +ValidateMove(Piece piece) boolean
     }
-
     class MoveValidator {
       +IsValidMove(Move move, Board board) boolean
       +GetAllValidMoves(Player player, Board board) List~.Move~
     }
-
     class GameRules {
       +IsCheckMate(Player player, Board board) boolean
       +IsStaleMate(Player player, Board board) boolean
+      +IsCatle(CheesGame game) boolean
       +IsDraw(CheeseGame game) boolean
     }
-
     class Color {
       <<Enumeration>>
       WHITE
       BLACK
     }
-
     class GameStatus {
       <<Enumeration>>
       NOT_STARTED
@@ -180,27 +153,23 @@ classDiagram
       DRAW
       RESIGNED
     }
-
     class GameResult {
       <<Enumeration>>
       WIN
       DRAW
       LOSE
     }
-
     class PlayerType {
       <<Enumeration>>
       HUMAN
       AI
     }
-
     class DifficultLevel {
       <<Enumeration>>
       EASY
       MEDIUM
       HARD
     }
-
     class MoveType {
       <<Enumeration>>
       NORMAL
@@ -211,9 +180,8 @@ classDiagram
       DIAGONAL
       KINGSIDE
     }
-
     class PieceType {
-      <<enumeration>>
+      <<Enumeration>>
       KING
       QUEEN
       ROOK
