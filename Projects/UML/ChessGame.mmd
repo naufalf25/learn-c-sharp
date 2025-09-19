@@ -1,0 +1,215 @@
+classDiagram
+    ChessGame o-- Player
+    ChessGame *-- Board
+    ChessGame *-- GameStatus
+    ChessGame ..> GameResult
+    ChessGame --o Move
+    Player *-- Color
+    Player *-- PlayerType
+    Player <|-- HumanPlayer
+    Player <|-- AIPlayer
+    IPlayer <|-- Player
+    Move -- Position
+    Move *-- MoveType
+    Square --|> ISquare
+    Board --|> IBoard
+    Board --o Square
+    Board o-- Piece
+    Piece --|> IPiece
+    Color --* Piece
+    Piece *-- PieceType
+    Piece <|-- King
+    Piece <|-- Queen
+    Piece <|-- Rook
+    Piece <|-- Bishop
+    Piece <|-- Knight
+    Piece <|-- Pawn
+    class ChessGame {
+      -int _moveCount
+      -List~.Move~ _moveHistory
+      -GameStatus _gameStatus
+      -IPlayer _currentPlayer
+      -List~.IPlayer~ _players
+      -IBoard _board
+      +ChessGame(Board board)
+      +delegate void OnGameEnded(GameResult result)
+      +StartGame() void
+      +EndGame(GameResult result) void
+      +MakeMove(Move move) void
+      +UndoLastMove() void
+      +Action<.GameResult>? OnGameEnded
+      -GetAllValidMoves(Player player, Board board) List~.Move~
+      -GetPiece(Position pos) Piece
+      -SetPiece(Position pos, Piece piece) void
+      -RemovePiece(Position pos) Piece
+      -IsCheck(Player player, Board board) boolean
+      -IsCheckMate(Player player, Board board) boolean
+      -IsStaleMate(Player player, Board board) boolean
+      -IsCastle(ChessGame game) boolean
+      -IsValidMove(Move move, Board board) boolean
+    }
+    class Player {
+      +string Name
+      +PlayerType type
+      +Color Color
+      +Player(string name, PlayerType type, Color color)
+      +MakeMove(Position startPosition, Position targetPosition) Move
+      +OfferDraw() void
+    }
+    class HumanPlayer {
+      -int _wins
+      +SelectPiece(Position pos) Piece
+      +ConfirmMove() boolean
+    }
+    class AIPlayer {
+      -int _thinkingTime
+      +ExecuteRandomMove() Move
+      +EvaluatePosition() int
+    }
+    class Board {
+      -List~.ISquare~ _squares
+      -List~.IPiece~ _capturedPieces
+      +Board()
+      +GenerateBoard() void
+    }
+    class Square {
+      -Piece piece
+      -Position position
+    }
+    class Piece {
+      <<abstract>>
+      -boolean _hasMoved
+      -PieceType _type
+      -Color _color
+      +Piece(Color color, PieceType pieceType)
+      +GetValidMoves(Board board) List~.Move~
+      -CanMoveTo(Position pos, Board board) boolean
+      +Move(Position newPosition) void
+    }
+    class King {
+      -boolean _inCheck
+      +King()
+      +GetValidMoves(Board board) List~.Move~
+      -CanCastle(Board board, boolean kingSide) boolean
+      -IsInCheck(Board board) boolean
+    }
+    class Queen {
+      +Queen()
+      +GetValidMoves(Board board) List~.Move~
+      -CanMoveDiagonal(Position pos, Board board) boolean
+      -CanMoveHorizontal(Position pos, Board board) boolean
+      -CanMoveVertical(Position pos, Board board) boolean
+    }
+    class Rook {
+      +Rook()
+      +GetValidMoves(Board board) List~.Move~
+      -CanMoveHorizontal(Position pos, Board board) boolean
+      -CanMoveVertical(Position pos, Board board) boolean
+    }
+    class Bishop {
+      +Bishop()
+      +GetValidMoves(Board board) List~.Move~
+      -CanMoveDiagonal(Position pos, Board board) boolean
+    }
+    class Knight {
+      +Knight()
+      +GetValidMoves(Board board) List~.Move~
+      -CanMoveLShape(Position pos, Board board) boolean
+    }
+    class Pawn {
+      -boolean _isFirstMove
+      +Pawn()
+      +GetValidMoves(Board board) List~.Move~
+      -CanMoveForward(Position pos, Board board) boolean
+      -CanCapture(Position pos, Board board) boolean
+      -CanEnPassant(Board board) boolean
+      -CanPromote() boolean
+      +PromoteTo(PieceType) void
+    }
+    class Position {
+      <<struct>>
+      -int x
+      -int y
+      +Position(int x, int y)
+      +IsValid() boolean
+      +ToString() string
+    }
+    class Move {
+      -Position _startPosition
+      -Position _targetPosition
+      -Piece _pieceType
+      -Piece _capturedPiece
+      -MoveType _moveType
+      +Move(Position startPos, Position targetPos, Piece type, Piece capturePiece)
+      +IsValid(Board board) boolean
+      +ToString() string
+    }
+    class IPlayer {
+      <<interface>>
+      +string Name
+      +PlayerType Type
+      +Color Color
+    }
+    class ISquare {
+      <<interface>>
+      +Piece piece
+      +Position position
+    }
+    class IPiece {
+      <<interface>>
+      +PieceType Type
+      +Color Color
+      +Position Position
+      +boolean HasMoved
+      +GetValidMoves(Board board) List~Move~
+    }
+    class IBoard {
+      <<interface>>
+      +List~.ISquare~ Squares
+      +List~.IPiece~ CapturedPieces
+      +GenerateBoard() void
+    }
+    class Color {
+      <<Enumeration>>
+      WHITE
+      BLACK
+    }
+    class GameStatus {
+      <<Enumeration>>
+      NOT_STARTED
+      IN_PROGRESS
+      CHECKMATE
+      STALEMATE
+      DRAW
+      RESIGNED
+    }
+    class GameResult {
+      <<Enumeration>>
+      WHITE_WIN
+      BLACK_WIN
+      DRAW
+      LOSE
+    }
+    class PlayerType {
+      <<Enumeration>>
+      HUMAN
+      AI
+    }
+    class MoveType {
+      <<Enumeration>>
+      NORMAL
+      CAPTURE
+      CASTLE_KINGSIDE
+      CASTLE_QUEENSIDE
+      EN_PASSANT
+      PROMOTION
+    }
+    class PieceType {
+      <<Enumeration>>
+      KING
+      QUEEN
+      ROCK
+      BISHOP
+      KNIGHT
+      PAWN
+    }
