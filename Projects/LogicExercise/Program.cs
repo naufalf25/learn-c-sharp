@@ -1,23 +1,28 @@
 ﻿static void FooBar(int n)
 {
+    Dictionary<int, string> divisibleValue = new()
+    {
+        { 3, "foo"},
+        { 4, "baz"},
+        { 5, "bar"},
+        { 7, "jazz" },
+        { 9, "huzz"}
+    };
+
     List<object> results = [];
 
-    for (int i = 1; i < n + 1; i++)
+    for (int i = 1; i <= n; i++)
     {
-        if (i % 3 == 0 && i % 5 == 0)
-            results.Add("foobar");
-        else if (i % 3 == 0)
-            results.Add("foo");
-        else if (i % 5 == 0)
-            results.Add("bar");
-        else
-            results.Add(i);
+        results.Add(i);
 
-        if (i % 7 == 0)
-            if (results[i - 1].GetType() == typeof(int))
-                results[i - 1] = "jazz";
-            else
-                results[i - 1] += "jazz";
+        foreach (var kvp in new[] { 3, 5, 7, 9 })
+        {
+            if (i % kvp == 0)
+                if (results[i - 1] is int)
+                    results[i - 1] = divisibleValue[kvp];
+                else
+                    results[i - 1] += divisibleValue[kvp];
+        }
     }
 
     Console.WriteLine(string.Join(", ", results));
@@ -32,3 +37,5 @@ Console.WriteLine("\nFor using parameter 35:");
 FooBar(35);
 Console.WriteLine("\nFor using parameter 105:");
 FooBar(105);
+Console.WriteLine("\nFor using parameter 315:");
+FooBar(315);
