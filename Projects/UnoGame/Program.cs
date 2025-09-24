@@ -14,8 +14,3 @@ ICard card = new Card(CardColor.Red, CardNumber.Two, ActionType.Wild);
 UnoGameController unoGameController = new(players, deck, table);
 
 unoGameController.StartGame();
-
-foreach (var player in unoGameController.GetAllPlayers())
-{
-    Console.WriteLine(player.Name);
-}

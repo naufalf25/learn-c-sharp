@@ -36,6 +36,8 @@ public class UnoGameController
     private void InitializeGame()
     {
         _playerhands.Clear();
+        _table.DiscardPile.Clear();
+        _table.DiscardCount = 0;
         InitializeDeckWithAllCards();
 
         foreach (var player in _players)
@@ -109,7 +111,7 @@ public class UnoGameController
             }
         }
 
-        while (!_deck.IsEmpty)
+        while (!_deck.IsEmpty && _table.DiscardCount == 0)
         {
             var firstCard = _deck.Cards.First();
             _deck.Cards.RemoveAt(0);
@@ -137,12 +139,31 @@ public class UnoGameController
 
     public bool PlayCard(IPlayer player, ICard card)
     {
-        if (_playerhands[player].Contains(card))
+        if (!CanPlayCard(player, card))
         {
-            ProcessActionCard(card);
-            RemoveCardFromPlayer(player, card);
+            OnGameAction?.Invoke($"Invalid move by {player.Name}");
+            return false;
+        }
+
+        RemoveCardFromPlayer(player, card);
+
+        _table.DiscardPile.Add(card);
+        _table.DiscardCount++;
+
+        OnGameAction?.Invoke($"Player {player.Name} played card {card.DisplayName}");
+
+        ProcessActionCard(card);
+
+        if (CheckPlayerHasWon(player))
+        {
+            _winner = player;
+            _gameEnded = true;
+            OnPlayerWin?.Invoke(player);
+            OnGameAction?.Invoke($"Player {player.Name} wins the game!");
             return true;
         }
+
+        OnGameAction?.Invoke($"Current player: {GetCurrentPlayer().Name}");
 
         return true;
     }
@@ -160,6 +181,9 @@ public class UnoGameController
         var drawnCard = _deck.Cards.First();
         _deck.Cards.RemoveAt(0);
         AddCardToPlayer(player, drawnCard);
+
+        if (_deck.Cards.Count == 0)
+            _deck.IsEmpty = true;
 
         OnGameAction?.Invoke($"{player.Name} drew a card");
 
@@ -191,7 +215,7 @@ public class UnoGameController
     public void AddCardToPlayer(IPlayer player, ICard card)
     {
         if (!_playerhands.ContainsKey(player))
-            _playerhands[player] = new List<ICard>();
+            _playerhands[player] = [];
 
         _playerhands[player].Add(card);
     }
@@ -203,7 +227,7 @@ public class UnoGameController
 
     private bool CheckPlayerHasWon(IPlayer player)
     {
-        return player == _winner;
+        return _playerhands.ContainsKey(player) && _playerhands[player].Count == 0;
     }
 
     public void ReshuffleDiscardPileToDeck()
@@ -215,6 +239,7 @@ public class UnoGameController
 
         _table.DiscardPile.Clear();
         _table.DiscardPile.Add(topCard);
+        _table.TopCard = topCard;
 
         var shuffled = cardToReshuffle.OrderBy(x => _random.Next()).ToList();
         foreach (var card in shuffled)
@@ -237,6 +262,9 @@ public class UnoGameController
     {
         _table.DiscardPile.Clear();
         _table.DiscardPile.Add(card);
+        _table.DiscardCount++;
+
+        _table.TopCard = card;
     }
 
     public IPlayer GetCurrentPlayer()
@@ -246,12 +274,20 @@ public class UnoGameController
 
     private void NextPlayer()
     {
-        int totalIndexPlayer = _players.Count;
+        int totalPlayer = _players.Count;
 
-        if (totalIndexPlayer == _currentPlayerIndex)
-            _currentPlayerIndex = 0;
+        if (_isReversed)
+        {
+            _currentPlayerIndex--;
+            if (_currentPlayerIndex < 0)
+                _currentPlayerIndex = totalPlayer;
+        }
         else
-            _currentPlayerIndex += 1;
+        {
+            _currentPlayerIndex++;
+            if (_currentPlayerIndex > totalPlayer)
+                _currentPlayerIndex = 0;
+        }
     }
 
     private void ProcessActionCard(ICard card)
@@ -282,8 +318,8 @@ public class UnoGameController
 
     private void ExecuteReverse()
     {
-        NextPlayer();
         _isReversed = !_isReversed;
+        NextPlayer();
         OnGameAction?.Invoke("Direction changed!");
     }
 
