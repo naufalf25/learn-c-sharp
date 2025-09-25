@@ -105,7 +105,7 @@ public class UnoGameController
                 if (!_deck.IsEmpty)
                 {
                     var card = _deck.Cards.First();
-                    _deck.Cards.RemoveAt(0);
+                    _deck.Cards.Remove(card);
                     AddCardToPlayer(player, card);
                 }
             }
@@ -114,7 +114,7 @@ public class UnoGameController
         while (!_deck.IsEmpty && _table.DiscardCount == 0)
         {
             var firstCard = _deck.Cards.First();
-            _deck.Cards.RemoveAt(0);
+            _deck.Cards.Remove(firstCard);
 
             if (firstCard.Action == null)
             {
@@ -133,8 +133,31 @@ public class UnoGameController
         InitializeGame();
         DealInitialCard();
 
+        Console.WriteLine("Starting the game...");
+        Console.WriteLine("Player Lists: ");
+        foreach (var player in _players)
+        {
+            Console.WriteLine($"* {player.Name} | {player.Type}");
+            Console.WriteLine("    With cards in hands:");
+            foreach (var card in _playerhands[player])
+            {
+                Console.WriteLine($"    * {card.Number}{card.Action} - {card.Color}");
+            }
+        }
+        Console.WriteLine();
+        Console.WriteLine("    The remaining cards in deck:");
+        foreach (var card in _deck.Cards)
+        {
+            Console.WriteLine($"    * {card.Number}{card.Action} - {card.Color}");
+        }
+
         OnGameAction?.Invoke("Game Started!");
         OnGameAction?.Invoke($"Current Player: {GetCurrentPlayer().Name}");
+    }
+
+    public void EndGame()
+    {
+        _gameEnded = true;
     }
 
     public bool PlayCard(IPlayer player, ICard card)
@@ -150,7 +173,7 @@ public class UnoGameController
         _table.DiscardPile.Add(card);
         _table.DiscardCount++;
 
-        OnGameAction?.Invoke($"Player {player.Name} played card {card.DisplayName}");
+        OnCardPlayed?.Invoke(player, card);
 
         ProcessActionCard(card);
 
@@ -179,7 +202,7 @@ public class UnoGameController
         }
 
         var drawnCard = _deck.Cards.First();
-        _deck.Cards.RemoveAt(0);
+        _deck.Cards.Remove(drawnCard);
         AddCardToPlayer(player, drawnCard);
 
         if (_deck.Cards.Count == 0)
@@ -305,9 +328,16 @@ public class UnoGameController
 
         if (card.IsWild)
         {
-            DeclareWildColor(card.Color);
+            Console.WriteLine("Choose new color (red, yellow, green blue):");
+            string? playerChoose = Console.ReadLine();
+
+            if (Enum.TryParse(playerChoose, true, out CardColor chosenColor))
+                DeclareWildColor(chosenColor);
+            else
+                DeclareWildColor(CardColor.Red);
         }
     }
+
 
     private void ExecuteSkip()
     {
