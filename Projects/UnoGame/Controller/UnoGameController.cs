@@ -133,24 +133,6 @@ public class UnoGameController
         InitializeGame();
         DealInitialCard();
 
-        Console.WriteLine("Starting the game...");
-        Console.WriteLine("Player Lists: ");
-        foreach (var player in _players)
-        {
-            Console.WriteLine($"* {player.Name} | {player.Type}");
-            Console.WriteLine("    With cards in hands:");
-            foreach (var card in _playerhands[player])
-            {
-                Console.WriteLine($"    * {card.Number}{card.Action} - {card.Color}");
-            }
-        }
-        Console.WriteLine();
-        Console.WriteLine("    The remaining cards in deck:");
-        foreach (var card in _deck.Cards)
-        {
-            Console.WriteLine($"    * {card.Number}{card.Action} - {card.Color}");
-        }
-
         OnGameAction?.Invoke("Game Started!");
         OnGameAction?.Invoke($"Current Player: {GetCurrentPlayer().Name}");
     }
@@ -407,5 +389,20 @@ public class UnoGameController
     public List<IPlayer> GetAllPlayers()
     {
         return new List<IPlayer>(_players);
+    }
+
+    public int GetRemainingCardsInDeck()
+    {
+        return _deck.Cards.Count;
+    }
+
+    public int GetCardsOnTable()
+    {
+        return _table.DiscardCount;
+    }
+
+    public bool IsReversed()
+    {
+        return _isReversed;
     }
 }
