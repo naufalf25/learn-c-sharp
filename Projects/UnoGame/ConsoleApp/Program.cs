@@ -1,4 +1,5 @@
 ﻿using ConsoleApp;
+using ConsoleUI;
 using Controller;
 using Enums;
 using Interfaces;
@@ -21,6 +22,9 @@ string? StartGame()
 
     UnoGameController unoGame = new(players, deck, table);
     unoGame.StartGame();
+
+    var UIController = new UIController(unoGame);
+    UIController.Run();
 
     return null;
 }

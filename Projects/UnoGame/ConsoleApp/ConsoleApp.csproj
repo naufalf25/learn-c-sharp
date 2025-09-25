@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\Controller\Controller.csproj" />
     <ProjectReference Include="..\MenuSystem\MenuSystem.csproj" />
+    <ProjectReference Include="..\ConsoleUI\ConsoleUI.csproj" />
   </ItemGroup>
 
 </Project>

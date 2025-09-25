@@ -31,8 +31,8 @@ public class Menu
             Console.WriteLine($"{menuItem.Key}) {menuItem.Value.MenuLabel}");
         }
 
-        Console.WriteLine("Your choice:");
         Console.WriteLine(_menuSeparator);
+        Console.WriteLine("Your choice:");
     }
 
     public string Run()

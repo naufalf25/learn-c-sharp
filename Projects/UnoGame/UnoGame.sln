@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuSystem", "MenuSystem\MenuSystem.csproj", "{F8189829-C5B6-447C-97C3-F1730D741CCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleUI", "ConsoleUI\ConsoleUI.csproj", "{4A8E14BE-616D-4F6C-8784-77F3089EEA57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{F8189829-C5B6-447C-97C3-F1730D741CCB}.Release|x64.Build.0 = Release|Any CPU
 		{F8189829-C5B6-447C-97C3-F1730D741CCB}.Release|x86.ActiveCfg = Release|Any CPU
 		{F8189829-C5B6-447C-97C3-F1730D741CCB}.Release|x86.Build.0 = Release|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Debug|x64.Build.0 = Debug|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Debug|x86.Build.0 = Debug|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Release|x64.ActiveCfg = Release|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Release|x64.Build.0 = Release|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Release|x86.ActiveCfg = Release|Any CPU
+		{4A8E14BE-616D-4F6C-8784-77F3089EEA57}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
