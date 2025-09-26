@@ -50,7 +50,7 @@ public class PlayerSetups
             {
                 Console.Write($"Enter the Name {playerType} of Player-{i}: ");
                 string userInput = Console.ReadLine()?.Trim();
-                playerName = $"Player {i} - {userInput}";
+                playerName = $"{userInput}";
 
                 if (!string.IsNullOrWhiteSpace(playerName) && playerName.Length > 0) break;
                 Console.WriteLine("Parse error...");

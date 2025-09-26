@@ -70,6 +70,8 @@ public class UnoGameController
 
         foreach (CardColor color in Enum.GetValues<CardColor>())
         {
+            if (color == CardColor.Wild) break;
+
             _deck.Cards.Add(new Card(color, CardNumber.Zero, null));
 
             for (int i = 1; i <= 9; i++)
@@ -89,8 +91,8 @@ public class UnoGameController
 
         for (int i = 0; i < 4; i++)
         {
-            _deck.Cards.Add(new Card(null, null, ActionType.Wild));
-            _deck.Cards.Add(new Card(null, null, ActionType.WildDrawFour));
+            _deck.Cards.Add(new Card(CardColor.Wild, null, ActionType.Wild));
+            _deck.Cards.Add(new Card(CardColor.Wild, null, ActionType.WildDrawFour));
         }
     }
 
