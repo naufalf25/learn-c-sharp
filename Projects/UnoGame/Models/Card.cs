@@ -16,7 +16,7 @@ public class Card : ICard
         Color = color;
         Number = number;
         Action = action;
-        IsWild = false;
-        DisplayName = "";
+        IsWild = action == ActionType.Wild || action == ActionType.WildDrawFour;
+        DisplayName = color.HasValue ? $"{color} {(action.HasValue ? action : number)}" : $"{action}";
     }
 }

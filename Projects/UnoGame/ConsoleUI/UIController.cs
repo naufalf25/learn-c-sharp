@@ -19,6 +19,8 @@ public class UIController
 
         while (_gameController.GetGameStatus() == "In Progress")
         {
+            Console.Clear();
+
             IPlayer currentPlayer = _gameController.GetCurrentPlayer();
             int currentPlayerNumber = _gameController.GetAllPlayers().IndexOf(currentPlayer) + 1;
 
@@ -35,8 +37,6 @@ public class UIController
 
             ConsoleVisualization.DrawPlayerInfo(currentPlayer, currentPlayerNumber);
             DrawGameInfo();
-
-            break;
         }
     }
 
@@ -46,7 +46,7 @@ public class UIController
 
         while (true)
         {
-            ConsoleVisualization.DrawDesk(_gameController.IsReversed(), _gameController.GetRemainingCardsInDeck(), _gameController.GetCardsOnTable(), _gameController.GetAllPlayers(), currentPlayer, _gameController.GetPlayerHand, _gameController.GetTopCardFromTable());
+            ConsoleVisualization.DrawDesk(_gameController.IsReversed(), _gameController.GetRemainingCardsInDeck(), _gameController.GetCardsOnTable(), _gameController.GetAllPlayers(), currentPlayer, _gameController.GetPlayerHand, _gameController.GetTopCardFromTable(), _gameController.DeclaredCardColor());
 
             ConsoleVisualization.DrawPlayerHands(_gameController.GetPlayerHand(currentPlayer), currentPlayer, _gameController.CanPlayCard, _gameController.GetTopCardFromTable());
 
@@ -58,44 +58,71 @@ public class UIController
             string playerChoice = Console.ReadLine()!.ToLower().Trim();
             if (!string.IsNullOrWhiteSpace(playerChoice))
             {
-                Console.WriteLine($"{currentPlayer.Name} choose {playerChoice}");
                 var action = ProcessPlayerChoice(playerChoice);
-
                 if (action != null)
                 {
-                    ProcessPlayerAction((PlayerActions)action);
-                    break;
+                    if (action == PlayerActions.Play && ProcessPlayerAction((PlayerActions)action))
+                        break;
+                    else if (action == PlayerActions.Draw)
+                    {
+                        _gameController.DrawCard(currentPlayer);
+                        break;
+                    }
+                    else if (action == PlayerActions.EndGame)
+                    {
+                        _gameController.EndGame();
+                        break;
+                    }
                 }
             }
         }
 
     }
 
-    private void ProcessPlayerAction(PlayerActions action)
+    private bool ProcessPlayerAction(PlayerActions action)
     {
         IPlayer currentPlayer = _gameController.GetCurrentPlayer();
         List<ICard> playerHands = _gameController.GetPlayerHand(currentPlayer);
 
-        while (true)
+        if (action == PlayerActions.Play)
         {
-            if (action == PlayerActions.Play)
-            {
-                ConsoleVisualization.DrawPlayerCardChoice(playerHands);
+            ConsoleVisualization.DrawPlayerCardChoice(playerHands);
 
-                Console.WriteLine("Your choice:");
-                int cardChoice = int.Parse(Console.ReadLine().Trim() ?? "0");
-                if (cardChoice >= 1 && cardChoice < playerHands.Count)
+            Console.WriteLine("Your choice:");
+            if (int.TryParse(Console.ReadLine().Trim() ?? "0", out int cardChoice))
+            {
+                if (cardChoice >= 1 && cardChoice <= playerHands.Count)
                 {
                     var selectedCard = playerHands[cardChoice - 1];
-                    Console.WriteLine($"Player select card: {selectedCard.Color} - {selectedCard.Number}");
+                    if (ProcessPlayCard(currentPlayer, selectedCard)) return true;
+                }
+                else
+                {
+                    Console.WriteLine("\u001b[31mInput number is out of range!\u001b[0m");
+                    Console.WriteLine();
                 }
             }
         }
+
+        return false;
     }
 
-    private static void ProcessPlayCard(ICard card)
+    private bool ProcessPlayCard(IPlayer player, ICard card)
     {
+        if (card.IsWild == true)
+        {
+            Console.WriteLine("Choose new color (red, yellow, green blue):");
+            string? playerChoose = Console.ReadLine();
 
+            if (Enum.TryParse(playerChoose, true, out CardColor chosenColor))
+                _gameController.DeclareWildColor(chosenColor);
+            else
+                _gameController.DeclareWildColor(CardColor.Red);
+        }
+
+        if (_gameController.PlayCard(player, card)) return true;
+
+        return false;
     }
 
     private static readonly Dictionary<PlayerActions, (string Keybind, string Description)> GetAllChoices = new()

@@ -21,6 +21,7 @@ string? StartGame()
     List<IPlayer> players = PlayerSetups.ConfigurePlayers(deck, table);
 
     UnoGameController unoGame = new(players, deck, table);
+    unoGame.OnGameAction += HandleGameAction;
     unoGame.StartGame();
 
     var UIController = new UIController(unoGame);
@@ -32,4 +33,10 @@ string? StartGame()
 string? ExitGame()
 {
     return null;
+}
+
+void HandleGameAction(string payload)
+{
+    Console.WriteLine(payload);
+    Thread.Sleep(1000);
 }

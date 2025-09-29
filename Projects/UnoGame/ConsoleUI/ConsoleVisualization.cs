@@ -23,9 +23,9 @@ public static class ConsoleVisualization
         Console.WriteLine(_createSeparator('=', 30));
     }
 
-    public static void DrawDesk(bool isReversed, int deckCardCount, int discardCount, List<IPlayer> players, IPlayer currentPlayer, Func<IPlayer, List<ICard>> getPlayerHands, ICard topCard)
+    public static void DrawDesk(bool isReversed, int deckCardCount, int discardCount, List<IPlayer> players, IPlayer currentPlayer, Func<IPlayer, List<ICard>> getPlayerHands, ICard topCard, CardColor declaredWildColor)
     {
-        Console.WriteLine($"Direction: \u001b[31m{(isReversed ? "Counterclockwise" : "Clockwise")}\u001b[0m");
+        Console.WriteLine($"\nDirection: \u001b[31m{(isReversed ? "Counterclockwise" : "Clockwise")}\u001b[0m");
         Console.WriteLine($"Draw pile: {deckCardCount} cards");
         Console.WriteLine($"Discard pile: {discardCount} cards");
 
@@ -39,7 +39,8 @@ public static class ConsoleVisualization
         }
         Console.WriteLine(_createSeparator('-', 28));
 
-        Console.WriteLine($"Top Card: {VisualizeCard(topCard)}");
+        Console.WriteLine($"Color: {declaredWildColor}");
+        Console.WriteLine($"Top Card: {VisualizeCard(topCard, true)}");
     }
 
     public static void DrawPlayerHands(List<ICard> playerHands, IPlayer player, Func<IPlayer, ICard, bool> canPlayCard, ICard topCard)
@@ -77,7 +78,7 @@ public static class ConsoleVisualization
     {
         for (int i = 0; i < cards.Count; i++)
         {
-
+            Console.WriteLine($"{i + 1}) {(cards[i].IsWild == true ? cards[i].Action : $"{cards[i].Color} - {(cards[i].Action.HasValue ? cards[i].Action : cards[i].Number)}")}");
         }
     }
 
@@ -93,7 +94,7 @@ public static class ConsoleVisualization
         return (formattedCard, shortcut);
     }
 
-    private static string VisualizeCard(ICard? card)
+    private static string VisualizeCard(ICard? card, bool topCard = false)
     {
         if (card == null) return "     ";
 
@@ -125,18 +126,11 @@ public static class ConsoleVisualization
         string shortcut = "";
         string colorCode = card.Color != null ? ColorCode((CardColor)card.Color) : "";
 
-        if (card.Color == CardColor.Wild)
-        {
-            if (card.Action == ActionType.WildDrawFour) shortcut = $"{colorCode}+4";
-            else shortcut = colorCode;
-        }
-
         if (card.Number.HasValue) shortcut = $"{colorCode}{(int)card.Number.Value}";
 
         if (card.Action != null)
         {
             string actionCode = ActionCode((ActionType)card.Action);
-
             shortcut = $"{colorCode}{actionCode}";
         }
 
@@ -163,6 +157,7 @@ public static class ConsoleVisualization
             ActionType.Skip => "S",
             ActionType.Reverse => "R",
             ActionType.DrawTwo => "+2",
+            ActionType.WildDrawFour => "+4",
             _ => "",
         };
     }
@@ -176,8 +171,8 @@ public static class ConsoleVisualization
             int cardNumber = (int)card.Number;
             valueDescription = cardNumber.ToString();
         }
-        else if (card.Color == CardColor.Wild)
-            valueDescription = "W";
+        else if (card.IsWild == true)
+            valueDescription = card.Action == ActionType.WildDrawFour ? "W+4" : "W";
         else if (card.Action != null)
             valueDescription = ActionCode((ActionType)card.Action);
         else

@@ -136,7 +136,7 @@ public class UnoGameController
         DealInitialCard();
 
         OnGameAction?.Invoke("Game Started!");
-        OnGameAction?.Invoke($"Current Player: {GetCurrentPlayer().Name}");
+        OnGameAction?.Invoke($"Current Player: {GetCurrentPlayer().Name}\n");
     }
 
     public void EndGame()
@@ -148,17 +148,24 @@ public class UnoGameController
     {
         if (!CanPlayCard(player, card))
         {
-            OnGameAction?.Invoke($"Invalid move by {player.Name}");
+            OnGameAction?.Invoke($"Invalid move by {player.Name} | Can't play card {card.Color} - {(card.Action.HasValue ? card.Action : card.Number)}");
             return false;
         }
 
-        RemoveCardFromPlayer(player, card);
+        var cardsToPlay = CardsToPlay(player, card);
 
-        _table.DiscardPile.Add(card);
-        _table.DiscardCount++;
+        foreach (var playedCard in cardsToPlay)
+        {
+            RemoveCardFromPlayer(player, playedCard);
+            _table.DiscardPile.Add(playedCard);
+            _table.DiscardCount++;
+        }
 
+        if (!card.IsWild && card.Color != _table.TopCard.Color)
+            DeclareWildColor(card.Color);
+
+        _table.TopCard = card;
         OnCardPlayed?.Invoke(player, card);
-
         ProcessActionCard(card);
 
         if (CheckPlayerHasWon(player))
@@ -192,7 +199,9 @@ public class UnoGameController
         if (_deck.Cards.Count == 0)
             _deck.IsEmpty = true;
 
-        OnGameAction?.Invoke($"{player.Name} drew a card");
+        OnGameAction?.Invoke(isForced
+            ? $"{player.Name} was forced to draw a card"
+            : $"{player.Name} drew a card");
 
         return drawnCard;
     }
@@ -207,6 +216,10 @@ public class UnoGameController
         if (topCard == null) return true;
 
         if (card.IsWild) return true;
+
+        if (card.Number.HasValue && card.Number == topCard.Number) return true;
+
+        if (card.Action.HasValue && card.Action == topCard.Action) return true;
 
         var effectiveTopColor = _declaredWildColor ?? topCard.Color;
         if (card.Color == effectiveTopColor) return true;
@@ -232,6 +245,23 @@ public class UnoGameController
         return _playerhands[player].Remove(card);
     }
 
+    private List<ICard> CardsToPlay(IPlayer player, ICard card)
+    {
+        var duplicates = _playerhands[player].Where(c => c != card && c.Color == card.Color && c.Number == card.Number && card.Number.HasValue).ToList();
+        var cardsToPlay = new List<ICard> { card };
+
+        if (duplicates.Count != 0)
+        {
+            foreach (var duplicateCard in duplicates)
+            {
+                cardsToPlay.Add(duplicateCard);
+                OnGameAction?.Invoke($"{player.Name} perform multi card play | {card.DisplayName}");
+            };
+        }
+
+        return cardsToPlay;
+    }
+
     private bool CheckPlayerHasWon(IPlayer player)
     {
         return _playerhands.ContainsKey(player) && _playerhands[player].Count == 0;
@@ -247,13 +277,11 @@ public class UnoGameController
         _table.DiscardPile.Clear();
         _table.DiscardPile.Add(topCard);
         _table.TopCard = topCard;
+        _declaredWildColor = topCard.Color;
 
         var shuffled = cardToReshuffle.OrderBy(x => _random.Next()).ToList();
         foreach (var card in shuffled)
         {
-            if (card.IsWild)
-                _declaredWildColor = null;
-
             _deck.Cards.Add(card);
         }
 
@@ -272,6 +300,7 @@ public class UnoGameController
         _table.DiscardCount++;
 
         _table.TopCard = card;
+        _declaredWildColor = card.Color;
     }
 
     public IPlayer GetCurrentPlayer()
@@ -285,15 +314,17 @@ public class UnoGameController
 
         if (_isReversed)
         {
-            _currentPlayerIndex--;
-            if (_currentPlayerIndex < 0)
-                _currentPlayerIndex = totalPlayer;
+            if (_currentPlayerIndex == 0)
+                _currentPlayerIndex = totalPlayer - 1;
+            else
+                _currentPlayerIndex--;
         }
         else
         {
-            _currentPlayerIndex++;
-            if (_currentPlayerIndex > totalPlayer)
+            if (_currentPlayerIndex == totalPlayer - 1)
                 _currentPlayerIndex = 0;
+            else
+                _currentPlayerIndex++;
         }
     }
 
@@ -304,22 +335,25 @@ public class UnoGameController
         else if (card.Action == ActionType.Reverse)
             ExecuteReverse();
         else if (card.Action == ActionType.DrawTwo)
-            ExecuteDrawTwo();
+        {
+            NextPlayer();
+            if (!HandleStackableDraw(GetCurrentPlayer(), (ActionType)card.Action))
+            {
+                ExecuteDrawTwo();
+            }
+        }
         else if (card.Action == ActionType.Wild)
             ExecuteWild();
         else if (card.Action == ActionType.WildDrawFour)
-            ExecuteWildDrawFour();
-
-        if (card.IsWild)
         {
-            Console.WriteLine("Choose new color (red, yellow, green blue):");
-            string? playerChoose = Console.ReadLine();
-
-            if (Enum.TryParse(playerChoose, true, out CardColor chosenColor))
-                DeclareWildColor(chosenColor);
-            else
-                DeclareWildColor(CardColor.Red);
+            NextPlayer();
+            if (!HandleStackableDraw(GetCurrentPlayer(), (ActionType)card.Action))
+            {
+                ExecuteWildDrawFour();
+            }
         }
+        else
+            NextPlayer();
     }
 
 
@@ -332,14 +366,15 @@ public class UnoGameController
 
     private void ExecuteReverse()
     {
-        _isReversed = !_isReversed;
         NextPlayer();
+        _isReversed = !_isReversed;
+
         OnGameAction?.Invoke("Direction changed!");
+        NextPlayer();
     }
 
     private void ExecuteDrawTwo()
     {
-        NextPlayer();
         var targetPlayer = GetCurrentPlayer();
 
         for (int i = 0; i < 2; i++)
@@ -353,13 +388,12 @@ public class UnoGameController
 
     private void ExecuteWild()
     {
+        OnGameAction?.Invoke($"Change Card Color on Next Turn");
         NextPlayer();
     }
 
     private void ExecuteWildDrawFour()
     {
-        NextPlayer();
-
         var targetPlayer = GetCurrentPlayer();
 
         for (int i = 0; i < 4; i++)
@@ -406,5 +440,24 @@ public class UnoGameController
     public bool IsReversed()
     {
         return _isReversed;
+    }
+
+    public CardColor DeclaredCardColor()
+    {
+        return (CardColor)_declaredWildColor;
+    }
+
+    private bool HandleStackableDraw(IPlayer player, ActionType action)
+    {
+        var mathingCard = _playerhands[player].FirstOrDefault(c => c.Action == ActionType.DrawTwo || c.Action == ActionType.WildDrawFour);
+
+        if (mathingCard != null)
+        {
+            OnGameAction?.Invoke($"{player.Name} counters with another {action}");
+            PlayCard(player, mathingCard);
+            return true;
+        }
+
+        return false;
     }
 }
