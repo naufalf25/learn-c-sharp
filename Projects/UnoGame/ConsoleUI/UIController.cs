@@ -68,6 +68,11 @@ public class UIController
                         _gameController.DrawCard(currentPlayer);
                         break;
                     }
+                    else if (action == PlayerActions.CallUno)
+                    {
+                        _gameController.CallUno(currentPlayer);
+                        break;
+                    }
                     else if (action == PlayerActions.EndGame)
                     {
                         _gameController.EndGame();

@@ -159,14 +159,20 @@ public class UnoGameController
             RemoveCardFromPlayer(player, playedCard);
             _table.DiscardPile.Add(playedCard);
             _table.DiscardCount++;
+            OnCardPlayed?.Invoke(player, playedCard);
         }
 
         if (!card.IsWild && card.Color != _table.TopCard.Color)
             DeclareWildColor(card.Color);
 
         _table.TopCard = card;
-        OnCardPlayed?.Invoke(player, card);
         ProcessActionCard(card);
+
+        if (_playerhands[player].Count == 0 && !player.HasSaidUno)
+        {
+            OnGameAction?.Invoke($"{player.Name} not said UNO before and forced to draw two cards");
+            DrawCardCount(player, true, 2);
+        }
 
         if (CheckPlayerHasWon(player))
         {
@@ -219,6 +225,9 @@ public class UnoGameController
 
         if (card.Number.HasValue && card.Number == topCard.Number) return true;
 
+        if (card.Action == ActionType.DrawTwo || card.Action == ActionType.WildDrawFour && topCard.Action == ActionType.DrawTwo || topCard.Action == ActionType.WildDrawFour)
+            return true;
+
         if (card.Action.HasValue && card.Action == topCard.Action) return true;
 
         var effectiveTopColor = _declaredWildColor ?? topCard.Color;
@@ -256,7 +265,8 @@ public class UnoGameController
             {
                 cardsToPlay.Add(duplicateCard);
                 OnGameAction?.Invoke($"{player.Name} perform multi card play | {card.DisplayName}");
-            };
+            }
+            ;
         }
 
         return cardsToPlay;
@@ -377,10 +387,7 @@ public class UnoGameController
     {
         var targetPlayer = GetCurrentPlayer();
 
-        for (int i = 0; i < 2; i++)
-        {
-            DrawCard(targetPlayer, true);
-        }
+        DrawCardCount(targetPlayer, true, 2);
 
         OnGameAction?.Invoke($"{targetPlayer.Name} draws 2 cards an loses their turn");
         NextPlayer();
@@ -396,10 +403,7 @@ public class UnoGameController
     {
         var targetPlayer = GetCurrentPlayer();
 
-        for (int i = 0; i < 4; i++)
-        {
-            DrawCard(targetPlayer, true);
-        }
+        DrawCardCount(targetPlayer, true, 4);
 
         OnGameAction?.Invoke($"{targetPlayer.Name} draws 4 cards and loses their turn");
         NextPlayer();
@@ -445,6 +449,31 @@ public class UnoGameController
     public CardColor DeclaredCardColor()
     {
         return (CardColor)_declaredWildColor;
+    }
+
+    public bool CallUno(IPlayer player)
+    {
+        if (_playerhands[player].Count != 1)
+        {
+            OnGameAction?.Invoke($"{player.Name} call UNO on wrong time");
+
+            DrawCardCount(player, true, 2);
+            return false;
+        }
+
+        var getPlayer = _players.FirstOrDefault(p => p == player);
+        if (getPlayer != null) getPlayer.HasSaidUno = true;
+
+        OnGameAction?.Invoke($"{player.Name} call UNO!");
+        return true;
+    }
+
+    private void DrawCardCount(IPlayer player, bool isForced, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            DrawCard(player, isForced);
+        }
     }
 
     private bool HandleStackableDraw(IPlayer player, ActionType action)

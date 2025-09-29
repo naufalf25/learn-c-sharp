@@ -22,6 +22,7 @@ string? StartGame()
 
     UnoGameController unoGame = new(players, deck, table);
     unoGame.OnGameAction += HandleGameAction;
+    unoGame.OnCardPlayed += HandleCardPlayed;
     unoGame.StartGame();
 
     var UIController = new UIController(unoGame);
@@ -39,4 +40,10 @@ void HandleGameAction(string payload)
 {
     Console.WriteLine(payload);
     Thread.Sleep(1000);
+}
+
+void HandleCardPlayed(IPlayer player, ICard card)
+{
+    Console.WriteLine($"{player.Name} played card {(card.IsWild ? card.Action : $"{card.Color} - {(card.Action.HasValue ? card.Action : card.Number)}")}");
+    Thread.Sleep(500);
 }
