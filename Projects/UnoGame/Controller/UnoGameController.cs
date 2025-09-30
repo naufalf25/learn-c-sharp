@@ -16,6 +16,9 @@ public class UnoGameController
     private IPlayer? _winner;
     private CardColor? _declaredWildColor;
     private Random _random;
+    public ActionType? StackedCardAction;
+    public int StackedDrawCount;
+    public bool IsStackedActive;
     public Action<string> OnGameAction;
     public Action<IPlayer, ICard> OnCardPlayed;
     public Action<IPlayer> OnPlayerWin;
@@ -31,6 +34,9 @@ public class UnoGameController
         _declaredWildColor = null;
         _random = new Random();
         _winner = null;
+        StackedCardAction = null;
+        StackedDrawCount = 0;
+        IsStackedActive = false;
     }
 
     private void InitializeGame()
@@ -162,7 +168,7 @@ public class UnoGameController
             OnCardPlayed?.Invoke(player, playedCard);
         }
 
-        if (!card.IsWild && card.Color != _table.TopCard.Color)
+        if (!card.IsWild && card.Color != _declaredWildColor)
             DeclareWildColor(card.Color);
 
         _table.TopCard = card;
@@ -178,24 +184,27 @@ public class UnoGameController
         {
             _winner = player;
             _gameEnded = true;
-            OnPlayerWin?.Invoke(player);
+            OnPlayerWin?.Invoke(_winner);
             OnGameAction?.Invoke($"Player {player.Name} wins the game!");
             return true;
         }
-
-        OnGameAction?.Invoke($"Current player: {GetCurrentPlayer().Name}");
 
         return true;
     }
 
     public ICard DrawCard(IPlayer player, bool isForced = false)
     {
+        if (player.HasSaidUno == true)
+        {
+            player.HasSaidUno = false;
+            OnGameAction?.Invoke($"{player.Name} UNO call has been reset");
+        }
+
         if (_deck.IsEmpty)
         {
             ReshuffleDiscardPileToDeck();
 
-            OnGameAction?.Invoke("No more card available");
-            return null;
+            Console.WriteLine($"Cards in deck now: {_deck.Cards.Count}");
         }
 
         var drawnCard = _deck.Cards.First();
@@ -215,19 +224,15 @@ public class UnoGameController
     public bool CanPlayCard(IPlayer player, ICard card)
     {
         if (!_playerhands[player].Contains(card)) return false;
-
         if (GetCurrentPlayer() != player) return false;
 
         var topCard = GetTopCardFromTable();
         if (topCard == null) return true;
 
         if (card.IsWild) return true;
-
         if (card.Number.HasValue && card.Number == topCard.Number) return true;
-
-        if (card.Action == ActionType.DrawTwo || card.Action == ActionType.WildDrawFour && topCard.Action == ActionType.DrawTwo || topCard.Action == ActionType.WildDrawFour)
-            return true;
-
+        if (card.Action == ActionType.DrawTwo && topCard.Action == ActionType.DrawTwo) return true;
+        if (card.Action == ActionType.WildDrawFour && topCard.Action == ActionType.WildDrawFour) return true;
         if (card.Action.HasValue && card.Action == topCard.Action) return true;
 
         var effectiveTopColor = _declaredWildColor ?? topCard.Color;
@@ -266,7 +271,6 @@ public class UnoGameController
                 cardsToPlay.Add(duplicateCard);
                 OnGameAction?.Invoke($"{player.Name} perform multi card play | {card.DisplayName}");
             }
-            ;
         }
 
         return cardsToPlay;
@@ -286,6 +290,7 @@ public class UnoGameController
 
         _table.DiscardPile.Clear();
         _table.DiscardPile.Add(topCard);
+        _table.DiscardCount = 1;
         _table.TopCard = topCard;
         _declaredWildColor = topCard.Color;
 
@@ -340,28 +345,19 @@ public class UnoGameController
 
     private void ProcessActionCard(ICard card)
     {
+        if (card.Action == ActionType.DrawTwo || card.Action == ActionType.WildDrawFour)
+        {
+            StackedDrawCount += card.Action == ActionType.DrawTwo ? 2 : 4;
+            StackedCardAction = card.Action;
+            IsStackedActive = true;
+        }
+
         if (card.Action == ActionType.Skip)
             ExecuteSkip();
         else if (card.Action == ActionType.Reverse)
             ExecuteReverse();
-        else if (card.Action == ActionType.DrawTwo)
-        {
-            NextPlayer();
-            if (!HandleStackableDraw(GetCurrentPlayer(), (ActionType)card.Action))
-            {
-                ExecuteDrawTwo();
-            }
-        }
         else if (card.Action == ActionType.Wild)
             ExecuteWild();
-        else if (card.Action == ActionType.WildDrawFour)
-        {
-            NextPlayer();
-            if (!HandleStackableDraw(GetCurrentPlayer(), (ActionType)card.Action))
-            {
-                ExecuteWildDrawFour();
-            }
-        }
         else
             NextPlayer();
     }
@@ -420,10 +416,7 @@ public class UnoGameController
         if (_gameEnded)
             return "Ended";
 
-        if (!_deck.IsEmpty)
-            return "In Progress";
-
-        return "Not Started";
+        return "In Progress";
     }
 
     public List<IPlayer> GetAllPlayers()
@@ -468,7 +461,7 @@ public class UnoGameController
         return true;
     }
 
-    private void DrawCardCount(IPlayer player, bool isForced, int count)
+    public void DrawCardCount(IPlayer player, bool isForced, int count)
     {
         for (int i = 0; i < count; i++)
         {
@@ -476,17 +469,30 @@ public class UnoGameController
         }
     }
 
-    private bool HandleStackableDraw(IPlayer player, ActionType action)
+    public ICard MatchingStackedCard(IPlayer player)
     {
-        var mathingCard = _playerhands[player].FirstOrDefault(c => c.Action == ActionType.DrawTwo || c.Action == ActionType.WildDrawFour);
+        return _playerhands[player].FirstOrDefault(c => c.Action == StackedCardAction);
+    }
 
-        if (mathingCard != null)
+    public void HandleStackableDraw(ICard matchingCard, IPlayer player, bool isMatchingCheck)
+    {
+        if (isMatchingCheck)
         {
-            OnGameAction?.Invoke($"{player.Name} counters with another {action}");
-            PlayCard(player, mathingCard);
-            return true;
+            if (matchingCard != null)
+            {
+                OnGameAction?.Invoke($"{player.Name} counters the draw card effect");
+                PlayCard(player, matchingCard);
+                return;
+            }
+            else
+            {
+                OnGameAction?.Invoke($"You don't have any {StackedCardAction} card to counter");
+            }
         }
 
-        return false;
+        OnGameAction?.Invoke($"{player.Name} draw {StackedDrawCount} cards");
+        DrawCardCount(player, true, StackedDrawCount);
+        IsStackedActive = false;
+        StackedDrawCount = 0;
     }
 }

@@ -28,27 +28,27 @@ public class PlayerSetups
 
         for (int i = 1; i <= playerCount; i++)
         {
-            string? inputType = "";
-            while (true)
-            {
-                Console.Write($"Set Player Type of Player-{i} (H - Human | A - AI/Computer): ");
-                inputType = Console.ReadLine()?.ToUpper().Trim();
+            // string? inputType = "";
+            // while (true)
+            // {
+            //     Console.Write($"Set Player Type of Player-{i} (H - Human | A - AI/Computer): ");
+            //     inputType = Console.ReadLine()?.ToUpper().Trim();
 
-                if (inputType == "H" || inputType == "A") break;
-                Console.WriteLine("Invalid player type! Please enter 'H' for Human or 'A' for AI/Computer");
-            }
+            //     if (inputType == "H" || inputType == "A") break;
+            //     Console.WriteLine("Invalid player type! Please enter 'H' for Human or 'A' for AI/Computer");
+            // }
 
-            PlayerType playerType = inputType switch
-            {
-                "H" => PlayerType.Human,
-                "A" => PlayerType.AI,
-                _ => throw new InvalidOperationException("Unexpected index player type")
-            };
+            // PlayerType playerType = inputType switch
+            // {
+            //     "H" => PlayerType.Human,
+            //     "A" => PlayerType.AI,
+            //     _ => throw new InvalidOperationException("Unexpected index player type")
+            // };
 
             string? playerName = "";
             while (true)
             {
-                Console.Write($"Enter the Name {playerType} of Player-{i}: ");
+                Console.Write($"Enter the Name of Player-{i}: ");
                 string userInput = Console.ReadLine()?.Trim();
                 playerName = $"{userInput}";
 
@@ -56,7 +56,7 @@ public class PlayerSetups
                 Console.WriteLine("Parse error...");
             }
 
-            players.Add(new Player(playerName, playerType));
+            players.Add(new Player(playerName, PlayerType.Human));
         }
 
         return players;

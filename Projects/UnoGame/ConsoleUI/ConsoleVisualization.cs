@@ -82,6 +82,13 @@ public static class ConsoleVisualization
         }
     }
 
+    public static void DrawIsStackedActive(IPlayer currentPlayer, int count, ActionType action)
+    {
+        Console.WriteLine(_createSeparator('=', 28));
+        Console.WriteLine($"{currentPlayer.Name}, you are affected by {action} card effect totaling {count} cards.");
+        Console.WriteLine("Do you want to counter with another draw card? [y/n]");
+    }
+
     private static (string card, string shortcut) RenderCardBlock(ICard card)
     {
         string colorCode = GetColorCode(card.Color);

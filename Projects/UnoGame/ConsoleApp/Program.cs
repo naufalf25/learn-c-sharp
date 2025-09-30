@@ -28,6 +28,8 @@ string? StartGame()
     var UIController = new UIController(unoGame);
     UIController.Run();
 
+    Console.WriteLine($"GameStatus: {unoGame.GetGameStatus()}");
+
     return null;
 }
 
