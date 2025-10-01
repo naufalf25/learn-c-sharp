@@ -19,7 +19,7 @@ public class UIController
 
         while (_gameController.GetGameStatus() == "In Progress")
         {
-            Console.Clear();
+            // Console.Clear();
             IPlayer currentPlayer = _gameController.GetCurrentPlayer();
             int currentPlayerNumber = _gameController.GetAllPlayers().IndexOf(currentPlayer) + 1;
 

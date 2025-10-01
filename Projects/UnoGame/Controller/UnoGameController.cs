@@ -480,7 +480,7 @@ public class UnoGameController
         {
             if (matchingCard != null)
             {
-                OnGameAction?.Invoke($"{player.Name} counters the draw card effect");
+                OnGameAction?.Invoke($"{player.Name} counters the {StackedCardAction} card effect");
                 PlayCard(player, matchingCard);
                 return;
             }
