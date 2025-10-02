@@ -1,8 +1,8 @@
-﻿using ConsoleApp;
-using ConsoleUI;
-using Controller;
-using Interfaces;
-using Models;
+﻿using UnoGame.ConsoleApp;
+using UnoGame.ConsoleUI;
+using UnoGame.BackEnd.Controller;
+using UnoGame.BackEnd.Interfaces;
+using UnoGame.BackEnd.Models;
 
 IDeck deck = new Deck();
 ITable table = new Table();

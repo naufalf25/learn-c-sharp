@@ -1,4 +1,4 @@
-namespace Enums;
+namespace UnoGame.BackEnd.Enums;
 
 public enum PlayerType
 {

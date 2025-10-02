@@ -1,6 +1,6 @@
-namespace Models;
+using UnoGame.BackEnd.Interfaces;
 
-using Interfaces;
+namespace UnoGame.BackEnd.Models;
 
 public class Table : ITable
 {

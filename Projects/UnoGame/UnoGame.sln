@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{20F8EBAA-0809-4250-A537-AB643E1BA3B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "UnoGame.Backend\Controller\Controller.csproj", "{20F8EBAA-0809-4250-A537-AB643E1BA3B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enums", "Enums\Enums.csproj", "{0EE32A0D-B747-4A0A-9062-1CE5815DEB3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enums", "UnoGame.Backend\Enums\Enums.csproj", "{0EE32A0D-B747-4A0A-9062-1CE5815DEB3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{910E0FF1-0C4A-450C-ACF0-89C0236C7076}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "UnoGame.Backend\Interfaces\Interfaces.csproj", "{910E0FF1-0C4A-450C-ACF0-89C0236C7076}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{9D70EAB9-1968-42C7-B482-E3777EDED89E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "UnoGame.Backend\Models\Models.csproj", "{9D70EAB9-1968-42C7-B482-E3777EDED89E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{6BA1ABA5-0FB9-4D42-B17D-930914156E19}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuSystem", "MenuSystem\MenuSystem.csproj", "{F8189829-C5B6-447C-97C3-F1730D741CCB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleUI", "ConsoleUI\ConsoleUI.csproj", "{4A8E14BE-616D-4F6C-8784-77F3089EEA57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "UnoGame.ConsoleApp\ConsoleApp.csproj", "{6BA1ABA5-0FB9-4D42-B17D-930914156E19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFApp", "WPFApp\WPFApp.csproj", "{66F66528-F572-4C50-B262-493F2E80383C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleUI", "UnoGame.ConsoleUI\ConsoleUI\ConsoleUI.csproj", "{976A4726-3E3F-4F29-98FB-2EB9009984D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenuSystem", "UnoGame.ConsoleUI\ConsoleMenuSystem\MenuSystem.csproj", "{DFD723BC-E5A2-4810-AD42-32E102F1A908}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,8 +125,37 @@ Global
 		{66F66528-F572-4C50-B262-493F2E80383C}.Release|x64.Build.0 = Release|Any CPU
 		{66F66528-F572-4C50-B262-493F2E80383C}.Release|x86.ActiveCfg = Release|Any CPU
 		{66F66528-F572-4C50-B262-493F2E80383C}.Release|x86.Build.0 = Release|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Debug|x64.Build.0 = Debug|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Debug|x86.Build.0 = Debug|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Release|x64.ActiveCfg = Release|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Release|x64.Build.0 = Release|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Release|x86.ActiveCfg = Release|Any CPU
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3}.Release|x86.Build.0 = Release|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Debug|x64.Build.0 = Debug|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Debug|x86.Build.0 = Debug|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Release|x64.ActiveCfg = Release|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Release|x64.Build.0 = Release|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Release|x86.ActiveCfg = Release|Any CPU
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{976A4726-3E3F-4F29-98FB-2EB9009984D3} = {DDCD9175-B1D8-3481-13C7-3607D302D926}
+		{8CD9C57D-5759-1E09-8040-7D2F017E113F} = {DDCD9175-B1D8-3481-13C7-3607D302D926}
+		{DFD723BC-E5A2-4810-AD42-32E102F1A908} = {8CD9C57D-5759-1E09-8040-7D2F017E113F}
 	EndGlobalSection
 EndGlobal

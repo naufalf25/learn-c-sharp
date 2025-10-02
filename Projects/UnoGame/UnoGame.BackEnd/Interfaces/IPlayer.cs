@@ -1,6 +1,6 @@
-using Enums;
+using UnoGame.BackEnd.Enums;
 
-namespace Interfaces;
+namespace UnoGame.BackEnd.Interfaces;
 
 public interface IPlayer
 {

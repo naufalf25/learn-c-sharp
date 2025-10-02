@@ -1,7 +1,7 @@
-namespace Models;
+using UnoGame.BackEnd.Enums;
+using UnoGame.BackEnd.Interfaces;
 
-using Enums;
-using Interfaces;
+namespace UnoGame.BackEnd.Models;
 
 public class Player : IPlayer
 {

@@ -1,7 +1,6 @@
-namespace Models;
+using UnoGame.BackEnd.Interfaces;
 
-using Enums;
-using Interfaces;
+namespace UnoGame.BackEnd.Models;
 
 public class Deck : IDeck
 {

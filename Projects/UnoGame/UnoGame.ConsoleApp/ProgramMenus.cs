@@ -1,6 +1,6 @@
-using MenuSystem;
+using UnoGame.ConsoleUI;
 
-namespace ConsoleApp;
+namespace UnoGame.ConsoleApp;
 
 public static class ProgramMenus
 {

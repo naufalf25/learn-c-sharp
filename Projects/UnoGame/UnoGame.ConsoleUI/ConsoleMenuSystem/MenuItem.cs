@@ -1,4 +1,4 @@
-namespace MenuSystem;
+namespace UnoGame.ConsoleUI;
 
 public class MenuItem
 {

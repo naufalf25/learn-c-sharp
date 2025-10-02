@@ -1,8 +1,8 @@
-using Enums;
-using Interfaces;
-using Models;
+using UnoGame.BackEnd.Enums;
+using UnoGame.BackEnd.Interfaces;
+using UnoGame.BackEnd.Models;
 
-namespace Controller;
+namespace UnoGame.BackEnd.Controller;
 
 public class UnoGameController
 {

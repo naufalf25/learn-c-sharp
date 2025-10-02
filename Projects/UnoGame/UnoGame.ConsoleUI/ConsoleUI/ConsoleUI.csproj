@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Controller\Controller.csproj" />
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\..\UnoGame.Backend\Controller\Controller.csproj" />
+    <ProjectReference Include="..\..\UnoGame.Backend\Enums\Enums.csproj" />
+    <ProjectReference Include="..\..\UnoGame.Backend\Interfaces\Interfaces.csproj" />
   </ItemGroup>
 </Project>
