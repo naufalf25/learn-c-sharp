@@ -44,7 +44,6 @@ public class UnoGameController
         _playerhands.Clear();
         _table.DiscardPile.Clear();
         _table.DiscardCount = 0;
-        InitializeDeckWithAllCards();
 
         foreach (var player in _players)
         {
@@ -68,38 +67,6 @@ public class UnoGameController
         _gameEnded = false;
         _winner = null;
         _deck.IsEmpty = _deck.Cards.Count == 0;
-    }
-
-    private void InitializeDeckWithAllCards()
-    {
-        _deck.Cards.Clear();
-
-        foreach (CardColor color in Enum.GetValues<CardColor>())
-        {
-            if (color == CardColor.Wild) break;
-
-            _deck.Cards.Add(new Card(color, CardNumber.Zero, null));
-
-            for (int i = 1; i <= 9; i++)
-            {
-                var cardNumber = (CardNumber)i;
-                _deck.Cards.Add(new Card(color, cardNumber, null));
-                _deck.Cards.Add(new Card(color, cardNumber, null));
-            }
-
-            for (int i = 0; i < 2; i++)
-            {
-                _deck.Cards.Add(new Card(color, null, ActionType.Skip));
-                _deck.Cards.Add(new Card(color, null, ActionType.Reverse));
-                _deck.Cards.Add(new Card(color, null, ActionType.DrawTwo));
-            }
-        }
-
-        for (int i = 0; i < 4; i++)
-        {
-            _deck.Cards.Add(new Card(CardColor.Wild, null, ActionType.Wild));
-            _deck.Cards.Add(new Card(CardColor.Wild, null, ActionType.WildDrawFour));
-        }
     }
 
     private void DealInitialCard()

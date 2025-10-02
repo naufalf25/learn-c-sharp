@@ -4,7 +4,7 @@ using UnoGame.BackEnd.Controller;
 using UnoGame.BackEnd.Interfaces;
 using UnoGame.BackEnd.Models;
 
-IDeck deck = new Deck();
+IDeck deck = DeckBuilder.BuildDeck();
 ITable table = new Table();
 
 var mainMenu = ProgramMenus.GetMainMenu(StartGame, ExitGame);
