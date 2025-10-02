@@ -1,8 +1,8 @@
-namespace Controller;
-
 using Enums;
 using Interfaces;
 using Models;
+
+namespace Controller;
 
 public class UnoGameController
 {

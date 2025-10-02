@@ -1,8 +1,5 @@
-using System.Drawing;
-using System.IO.Compression;
 using Enums;
 using Interfaces;
-using Models;
 
 namespace ConsoleUI;
 

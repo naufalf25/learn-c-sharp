@@ -1,7 +1,6 @@
 ﻿using ConsoleApp;
 using ConsoleUI;
 using Controller;
-using Enums;
 using Interfaces;
 using Models;
 
@@ -23,6 +22,7 @@ string? StartGame()
     UnoGameController unoGame = new(players, deck, table);
     unoGame.OnGameAction += HandleGameAction;
     unoGame.OnCardPlayed += HandleCardPlayed;
+    unoGame.OnPlayerWin += HandleWinner;
     unoGame.StartGame();
 
     var UIController = new UIController(unoGame);
@@ -48,4 +48,9 @@ void HandleCardPlayed(IPlayer player, ICard card)
 {
     Console.WriteLine($"{player.Name} played card {(card.IsWild ? card.Action : $"{card.Color} - {(card.Action.HasValue ? card.Action : card.Number)}")}");
     Thread.Sleep(500);
+}
+
+void HandleWinner(IPlayer player)
+{
+    Console.WriteLine($"Congratulation for {player.Name}, you're win the game!");
 }
