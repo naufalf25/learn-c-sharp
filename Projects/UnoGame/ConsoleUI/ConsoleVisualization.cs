@@ -40,7 +40,7 @@ public static class ConsoleVisualization
         Console.WriteLine(_createSeparator('-', 28));
 
         Console.WriteLine($"Color: {declaredWildColor}");
-        Console.WriteLine($"Top Card: {VisualizeCard(topCard, true)}");
+        Console.WriteLine($"Top Card: {VisualizeCard(topCard)}");
     }
 
     public static void DrawPlayerHands(List<ICard> playerHands, IPlayer player, Func<IPlayer, ICard, bool> canPlayCard, ICard topCard)
@@ -78,7 +78,7 @@ public static class ConsoleVisualization
     {
         for (int i = 0; i < cards.Count; i++)
         {
-            Console.WriteLine($"{i + 1}) {(cards[i].IsWild == true ? cards[i].Action : $"{cards[i].Color} - {(cards[i].Action.HasValue ? cards[i].Action : cards[i].Number)}")}");
+            Console.WriteLine($"{i + 1}) {VisualizeCard(cards[i])} {(cards[i].IsWild == true ? cards[i].Action : $"{cards[i].Color} - {(cards[i].Action.HasValue ? cards[i].Action : cards[i].Number)}")}");
         }
     }
 
@@ -101,7 +101,7 @@ public static class ConsoleVisualization
         return (formattedCard, shortcut);
     }
 
-    private static string VisualizeCard(ICard? card, bool topCard = false)
+    private static string VisualizeCard(ICard? card)
     {
         if (card == null) return "     ";
 
