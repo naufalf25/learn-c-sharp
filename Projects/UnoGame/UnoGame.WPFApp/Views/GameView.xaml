@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="UnoGame.WPFApp.Views.GameView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:UnoGame.WPFApp.ViewModels"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnoGame.WPFApp.Views"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:GameViewModel}">
+    <Grid Margin="0,100">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <TextBlock Text="Current Hand:" FontFamily="Bahnschrift" FontSize="20" Foreground="White" />
+            <TextBlock Text="{Binding CurrentPlayer.Name}" FontFamily="Bahnschrift" FontSize="25" Foreground="White" />
+            <ItemsControl ItemsSource="{Binding PlayerHand}" Margin="0,30,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding DataContext.PlayCardCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding Card}"
+                                Width="100" Background="Transparent" BorderThickness="0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Opacity" Value="1" />
+                                    <Setter Property="Margin" Value="5,10,5,0" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <ContentPresenter />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.7" />
+                                        </Trigger>
+                                        <DataTrigger Binding="{Binding CanPlay}" Value="True">
+                                            <Setter Property="Margin" Value="5,-20,5,30" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <Image Source="{Binding ImagePath}" Stretch="UniformToFill" />
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

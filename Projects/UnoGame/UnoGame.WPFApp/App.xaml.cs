@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace WPFApp;
+namespace UnoGame.WPFApp;
 
 /// <summary>
 /// Interaction logic for App.xaml

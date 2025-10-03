@@ -1,25 +1,16 @@
-﻿<Window x:Class="WPFApp.MainWindow"
+﻿<Window x:Class="UnoGame.WPFApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WPFApp"
+        xmlns:local="clr-namespace:UnoGame.WPFApp"
         mc:Ignorable="d"
         Title="MainWindow" Width="1366" Height="728">
     <Window.Background>
-        <ImageBrush ImageSource="pack://application:,,,/Assets/background.jpg" Stretch="UniformToFill" />
+        <ImageBrush ImageSource="pack://application:,,,/Resources/background.jpg" Stretch="UniformToFill" />
     </Window.Background>
     <Grid Width="Auto" Height="Auto">
-        <Grid x:Name="MainMenu" Visibility="Visible">
-            <Grid x:Name="MainMenuTitle" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,121,0,0">
-                <TextBlock Text="Welcome To" FontSize="40" FontFamily="Bahnschrift" Foreground="Azure" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,35,0,0" />
-                <TextBlock Text="UNO GAME" FontSize="80" FontFamily="Bahnschrift" Foreground="White" Margin="0,83,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" />
-            </Grid>
-            <Grid Margin="512,356,512,41">
-                <Button x:Name="PlayGame" Content="Play Game" FontSize="30" FontWeight="DemiBold" Background="White" Width="250" Height="70" Margin="46,88,46,157" />
-                <Button x:Name="ExitGame" Content="Exit Game" FontSize="30" FontWeight="DemiBold" Background="White" Width="250" Height="70" Margin="46,176,46,69" />
-            </Grid>
-        </Grid>
+        <ContentControl x:Name="MainContent" />
         <Grid x:Name="PlayerSetup" Visibility="Hidden">
             <Grid x:Name="PlayerSetup_SetTotalPlayer" Margin="486,105,486,105" Visibility="Hidden">
                 <TextBlock Text="Set Total Player" FontFamily="Bahnschrift" FontSize="30" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,130,0,0" />
@@ -41,10 +32,10 @@
                 <Grid x:Name="Deck" Margin="79,30,333,30">
                     <TextBlock x:Name="DeckCount" Text="96" FontSize="45" Margin="163,57,42,0" VerticalAlignment="Top" FontWeight="DemiBold" Foreground="White" FontFamily="Bahnschrift" />
                     <TextBlock Text="cards" FontSize="30" FontWeight="Medium" Foreground="White" FontFamily="Bahnschrift" Margin="150,111,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <Image Source="Assets/Card/Uno.png" Width="100" Margin="40,0,0,0" HorizontalAlignment="Left" />
+                    <Image Source="Resources/Card/Uno.png" Width="100" Margin="40,0,0,0" HorizontalAlignment="Left" />
                 </Grid>
                 <Grid x:Name="TopCard" Margin="450,50,110,50">
-                    <Image Source="Assets/Card/Uno.png" Width="100" />
+                    <Image Source="Resources/Card/Uno.png" Width="100" />
                 </Grid>
             </Grid>
             <Grid x:Name="TopCardGrid" Margin="350,50,350,520"></Grid>
