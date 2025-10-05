@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using UnoGame.BackEnd.Interfaces;
 using UnoGame.WPFApp.ViewModels;
 
@@ -26,6 +28,25 @@ namespace UnoGame.WPFApp.Views
         {
             InitializeComponent();
             DataContext = new GameViewModel(mainWindow, players);
+            var vm = DataContext as GameViewModel;
+            if (vm?.GameLog != null)
+            {
+                vm.GameLog.CollectionChanged += GameLog_CollectionChanged;
+            }
+        }
+
+        private void GameLog_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (GameLogListBox.Items.Count > 0)
+                    {
+                        GameLogListBox.ScrollIntoView(GameLogListBox.Items[GameLogListBox.Items.Count - 1]);
+                    }
+                }), DispatcherPriority.Background);
+            }
         }
     }
 }

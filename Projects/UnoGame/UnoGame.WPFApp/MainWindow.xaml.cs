@@ -46,6 +46,6 @@ public partial class MainWindow : Window
 
     public void NavigateToEndGame(IPlayer winnerPlayer)
     {
-        //MainContent.Content = new EndGameView(this, winnerPlayer);
+        MainContent.Content = new EndGameView(this, winnerPlayer);
     }
 }

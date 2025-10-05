@@ -1,6 +1,5 @@
 using UnoGame.BackEnd.Enums;
 using UnoGame.BackEnd.Interfaces;
-using UnoGame.BackEnd.Models;
 
 namespace UnoGame.BackEnd.Controller;
 
@@ -424,7 +423,7 @@ public class UnoGameController
         var getPlayer = _players.FirstOrDefault(p => p == player);
         if (getPlayer != null) getPlayer.HasSaidUno = true;
 
-        OnGameAction?.Invoke($"{player.Name} call UNO!");
+        OnGameAction?.Invoke($"{player.Name} called UNO!");
         return true;
     }
 
