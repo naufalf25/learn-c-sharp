@@ -338,7 +338,6 @@ public class UnoGameController
 
     private void ExecuteReverse()
     {
-        NextPlayer();
         _isReversed = !_isReversed;
 
         OnGameAction?.Invoke("Direction changed!");
