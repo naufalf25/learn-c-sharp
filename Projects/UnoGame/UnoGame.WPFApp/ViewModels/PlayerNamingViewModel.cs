@@ -9,6 +9,7 @@ using UnoGame.BackEnd.Enums;
 using UnoGame.BackEnd.Interfaces;
 using UnoGame.BackEnd.Models;
 using UnoGame.WPFApp.Commands;
+using UnoGame.WPFApp.Helper;
 
 namespace UnoGame.WPFApp.ViewModels
 {
@@ -39,6 +40,7 @@ namespace UnoGame.WPFApp.ViewModels
                 .Cast<IPlayer>()
                 .ToList();
 
+            SoundManager.PlaySound("click");
             _mainWindow.NavigateToGame(players);
         }
     }

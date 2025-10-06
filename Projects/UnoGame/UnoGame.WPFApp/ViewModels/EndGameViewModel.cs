@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using UnoGame.BackEnd.Interfaces;
 using UnoGame.WPFApp.Commands;
+using UnoGame.WPFApp.Helper;
 
 namespace UnoGame.WPFApp.ViewModels
 {
@@ -24,11 +25,13 @@ namespace UnoGame.WPFApp.ViewModels
 
             BackToMainMenuCommand = new RelayCommand(_ =>
             {
+                SoundManager.PlaySound("click");
                 _mainWindow.NavigateToMainMenu();
             });
 
             ExitGameCommand = new RelayCommand(_ =>
             {
+                SoundManager.PlaySound("click");
                 App.Current.Shutdown();
             });
         }

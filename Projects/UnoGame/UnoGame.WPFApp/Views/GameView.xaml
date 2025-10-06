@@ -10,27 +10,35 @@
              d:DataContext="{d:DesignInstance Type=vm:GameViewModel}">
     <UserControl.Resources>
         <helper:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <helper:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+        <helper:DirectionConverter x:Key="DirectionConverter" />
+        <helper:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+        <helper:MuteButtonConverter x:Key="MuteButtonConverter" />
     </UserControl.Resources>
     <Grid>
-        <ItemsControl ItemsSource="{Binding PlayerCards}" Margin="50" HorizontalAlignment="Left">
+        <!-- Center Table Ellipse -->
+        <Ellipse Fill="#006D28" Opacity="0.4"
+                 Width="700" Height="400"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+        
+        <!-- Other Player Cards -->
+        <ItemsControl ItemsSource="{Binding PlayerCards}" HorizontalAlignment="Center" VerticalAlignment="Top">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="30" HorizontalAlignment="Center">
-                        <Image Source="pack://application:,,,/Resources/Card/uno.png" Width="90" Height="130"/>
-                        <StackPanel Orientation="Vertical" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Name}" FontFamily="Bahnschrift" Foreground="White" FontWeight="Bold" FontSize="20" TextAlignment="Center"/>
-                            <TextBlock Text="{Binding CardCount, StringFormat={}{0} cards}" FontFamily="Bahnschrift" Foreground="LightGray" FontSize="18" TextAlignment="Center"/>
-                        </StackPanel>
+                    <StackPanel Margin="50" HorizontalAlignment="Center">
+                        <Image Source="pack://application:,,,/Resources/Card/uno.png" Width="80" Height="115"/>
+                        <TextBlock Text="{Binding Name}" FontFamily="Bahnschrift" Foreground="White" FontSize="18" TextAlignment="Center" Margin="0,20,0,0"/>
+                        <TextBlock Text="{Binding CardCount, StringFormat={}{0} cards}" FontFamily="Bahnschrift" Foreground="LightGray" FontSize="16" TextAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <!-- Overlay Next Player -->
         <Grid x:Name="OverlayPanel"
               Background="#EE000000"
               Visibility="{Binding OverlayNextPlayer}"
@@ -45,21 +53,23 @@
                 <Button Content="Ready" Command="{Binding ReadyCommand}" Width="200" FontFamily="Bahnschrift" FontSize="16" Margin="0,30" />
             </StackPanel>
         </Grid>
-        <ListBox ItemsSource="{Binding GameLog}" x:Name="GameLogListBox"
-                 Grid.Row="2" Grid.Column="1"
-                 Width="400" Height="300" Margin="10"
-                 Background="#CC000000" Foreground="White"
-                 FontSize="14" 
-                 HorizontalAlignment="Right" VerticalAlignment="Top"/>
-        <Button Content="Call UNO" Command="{Binding CallUnoCommand}" 
+        
+        <!-- Call UNO Button -->
+        <Button Content="UNO!" Command="{Binding CallUnoCommand}"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Visibility="{Binding CalledUnoButton}" 
-                Margin="100,200" Padding="20,10" FontSize="20" Background="OrangeRed" Foreground="White"/>
+                Margin="100" Padding="25,15"
+                Background="OrangeRed" Foreground="White"
+                FontFamily="Bahnschrift" FontWeight="Bold" FontSize="24"
+                Visibility="{Binding CalledUnoButton}" />
+        
+        <!-- Stack Active Panel -->
         <StackPanel Visibility="{Binding IsStackedActive, Converter={StaticResource BoolToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,300">
             <TextBlock Text="You can counter the draw!" Foreground="Yellow" FontSize="16"/>
             <Button Content="Take Draw Instead" Command="{Binding TakeDrawCommand}" 
                     Margin="0,10,0,0" Padding="10,5" FontSize="14" Background="DarkRed" Foreground="White" FontFamily="Bahnschrift" FontWeight="DemiBold" />
         </StackPanel>
+        
+        <!-- Color Picker -->
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsColorPickerVisibility}">
             <TextBlock Text="Pick New Color:" Foreground="White" FontFamily="Bahnschrift" FontWeight="DemiBold" TextAlignment="Center" />
             <StackPanel Orientation="Horizontal"
@@ -70,50 +80,49 @@
                 <Button Background="Blue" Command="{Binding PickColorCommand}" CommandParameter="Blue" Width="50" Height="50" Margin="5"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding CenterTable}">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Button Command="{Binding DataContext.DrawCardCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                        Background="Transparent"
-                        Width="90"        
-                        Height="135">
-                    <Image Source="pack://application:,,,/Resources/Card/uno.png"            
-                           Stretch="UniformToFill" />
-                </Button>
-                <StackPanel Margin="20,0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="Cards to Draw:" Foreground="White" FontSize="16" FontFamily="Bahnschrift" FontWeight="DemiBold" TextAlignment="Center" />
-                    <TextBlock Text="{Binding DrawCardCount, StringFormat={}{0} cards}" FontSize="20" Foreground="White" FontFamily="Bahnschrift" FontWeight="DemiBold" TextAlignment="Center" />
-                    <TextBlock Text="Discard Pile:" FontSize="16" Foreground="White" FontFamily="Bahnschrift" FontWeight="DemiBold" TextAlignment="Center" Margin="0,20,0,0" />
-                    <TextBlock Text="{Binding DiscardPileCount, StringFormat={}{0} cards}" FontSize="20" Foreground="White" FontFamily="Bahnschrift" FontWeight="DemiBold" TextAlignment="Center" />
-                    <TextBlock Text="Current Card Color:" Foreground="White" FontSize="16" FontFamily="Bahnschrift" FontWeight="DemiBold" TextAlignment="Center" Margin="0,20,0,0" />
-                    <TextBlock Text="{Binding CurrentColor}" FontSize="20" Foreground="White" FontFamily="Bahnschrift" FontWeight="DemiBold" TextAlignment="Center" />
-                </StackPanel>
+        
+        <!-- Center Table -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding CenterTable}">
+            <!-- Draw Pile -->
+            <Button Command="{Binding DrawCardCommand}" Background="Transparent" BorderThickness="0" Margin="15,0">
+                <Image Source="pack://application:,,,/Resources/Card/uno.png"
+                       Width="90" Height="135" Stretch="UniformToFill"/>
+            </Button>
+
+            <!-- Info Tengah -->
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="15,0">
+                <TextBlock Text="Cards to Draw:" Foreground="White" FontSize="14" FontFamily="Bahnschrift" TextAlignment="Center"/>
+                <TextBlock Text="{Binding DrawCardCount, StringFormat={}{0} cards}" Foreground="White" FontWeight="Bold" FontSize="18" TextAlignment="Center"/>
+                <TextBlock Text="Discard Pile:" Foreground="White" FontSize="14" FontFamily="Bahnschrift" Margin="0,10,0,0" TextAlignment="Center"/>
+                <TextBlock Text="{Binding DiscardPileCount, StringFormat={}{0} cards}" Foreground="White" FontWeight="Bold" FontSize="18" TextAlignment="Center"/>
+                <TextBlock Text="Current Color:" Foreground="White" FontSize="14" FontFamily="Bahnschrift" Margin="0,10,0,0" TextAlignment="Center"/>
+                <TextBlock Text="{Binding CurrentColor}" Foreground="Yellow" FontWeight="Bold" FontSize="20" TextAlignment="Center"/>
             </StackPanel>
-            <Image Source="{Binding TopCard.ImagePath}" 
-                   Stretch="UniformToFill"
-                   Width="85"
-                   Height="130"/>
+
+            <!-- Discard Pile -->
+            <Border BorderBrush="#FFFFFF55" BorderThickness="2" CornerRadius="8" Padding="3" Margin="15,0">
+                <Image Source="{Binding TopCard.ImagePath}" Width="90" Height="135" Stretch="UniformToFill"/>
+            </Border>
         </StackPanel>
-        <StackPanel Margin="0,50" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <TextBlock Text="Current Hand:" FontFamily="Bahnschrift" FontSize="16" Foreground="White" TextAlignment="Center" />
-            <TextBlock Text="{Binding CurrentPlayer.Name}" FontFamily="Bahnschrift" FontSize="20" Foreground="White" TextAlignment="Center" />
-            <ItemsControl ItemsSource="{Binding PlayerHand}" Margin="0,30,0,0">
+        
+        <!-- Current Player Hand -->
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,50">
+            <TextBlock Text="Current Hand:" FontFamily="Bahnschrift" FontSize="20" Foreground="White" TextAlignment="Center" />
+            <TextBlock Text="{Binding CurrentPlayer.Name}" FontFamily="Bahnschrift" FontSize="20" Foreground="White" TextAlignment="Center"/>
+            <ItemsControl ItemsSource="{Binding PlayerHand}" Margin="0,20,0,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Command="{Binding DataContext.PlayCardCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                CommandParameter="{Binding Card}"
-                                Width="90" Background="Transparent" BorderThickness="0">
+                                CommandParameter="{Binding Card}" 
+                                Background="Transparent" BorderThickness="0" Width="90">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Margin" Value="-20,10,-20,0" />
+                                    <Setter Property="Margin" Value="-20,20,-20,0" />
                                     <Setter Property="Background" Value="Transparent" />
                                     <Setter Property="BorderBrush" Value="Transparent" />
                                     <Setter Property="BorderThickness" Value="2" />
@@ -122,16 +131,59 @@
                                             <Setter Property="BorderBrush" Value="LightGoldenrodYellow" />
                                         </Trigger>
                                         <DataTrigger Binding="{Binding CanPlay}" Value="True">
-                                            <Setter Property="Margin" Value="-20,-20,-20,30" />
+                                            <Setter Property="Margin" Value="-20,-10,-20,30" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Button.Style>
-                            <Image Source="{Binding ImagePath}" Stretch="UniformToFill" />
+                            <Image Source="{Binding ImagePath}" Width="90" Height="135" Stretch="UniformToFill"/>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
+
+        <!-- GAME LOG -->
+        <Border Background="#66000000" CornerRadius="8" Padding="8"
+                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="20">
+            <ListBox ItemsSource="{Binding GameLog}" x:Name="GameLogListBox"
+                 Grid.Row="2" Grid.Column="1"
+                 Width="250" Height="360"
+                 Background="#66000000" Foreground="White"
+                 FontSize="14"  FontFamily="Consolas" />
+        </Border>
+        
+        <!-- Game Status -->
+        <Border Background="#66000000" CornerRadius="8" Padding="8"
+                HorizontalAlignment="Left" VerticalAlignment="Center" 
+                Margin="15" MinWidth="250" Height="200">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="GAME STATUS" FontSize="20" FontFamily="Bahnschrift" FontWeight="Bold" Foreground="Gold" Margin="0,0,0,20" />
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Turn: " Foreground="White" FontFamily="Bahnschrift" FontSize="16" />
+                    <TextBlock Text="{Binding CurrentPlayer.Name}" FontFamily="Bahnschrift" FontSize="16" Foreground="LightGreen" FontWeight="DemiBold" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Direction: " Foreground="White" FontFamily="Bahnschrift" FontSize="16" />
+                    <TextBlock Text="{Binding IsReversed, Converter={StaticResource DirectionConverter}}" FontFamily="Bahnschrift" FontSize="16" Foreground="LightBlue" FontWeight="DemiBold" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Direction: " Foreground="White" FontFamily="Bahnschrift" FontSize="16" />
+                    <TextBlock Text="{Binding CurrentColor}" FontFamily="Bahnschrift" FontSize="16" Foreground="{Binding CurrentColor, Converter={StaticResource ColorToBrushConverter}}" FontWeight="DemiBold" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        
+        <!-- Mute Music Button -->
+        <Button Command="{Binding MuteBacksoundCommand}" 
+                Content="{Binding IsBacksoundMuted, Converter={StaticResource MuteButtonConverter}, ConverterParameter='🔇|🔊'}"
+                Width="50" Height="50"
+                BorderThickness="0"
+                FontSize="24"
+                Background="Transparent"
+                Foreground="White"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="20"
+                Click="MuteButton_Click"/>
     </Grid>
 </UserControl>

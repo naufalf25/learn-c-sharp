@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UnoGame.WPFApp.Commands;
+using UnoGame.WPFApp.Helper;
 
 namespace UnoGame.WPFApp.ViewModels
 {
@@ -23,7 +24,11 @@ namespace UnoGame.WPFApp.ViewModels
         public PlayerCountViewModel(MainWindow mainWindow)
         {
             _mainWindow = mainWindow;
-            ConfirmCommand = new RelayCommand(_ => NavigateToPlayerNaming());
+            ConfirmCommand = new RelayCommand(_ =>
+            {
+                SoundManager.PlaySound("click");
+                NavigateToPlayerNaming();
+            });
         }
 
         private void NavigateToPlayerNaming()

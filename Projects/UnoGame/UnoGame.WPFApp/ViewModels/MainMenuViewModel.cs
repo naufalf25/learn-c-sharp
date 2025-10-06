@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UnoGame.WPFApp.Commands;
+using UnoGame.WPFApp.Helper;
 
 namespace UnoGame.WPFApp.ViewModels
 {
@@ -17,8 +18,16 @@ namespace UnoGame.WPFApp.ViewModels
         public MainMenuViewModel(MainWindow mainWindow)
         {
             _mainWindow = mainWindow;
-            StartGameCommand = new RelayCommand(_ => NavigateToPlayerCount());
-            ExitGameCommand = new RelayCommand(_ => App.Current.Shutdown());
+            StartGameCommand = new RelayCommand(_ =>
+            {
+                SoundManager.PlaySound("click");
+                NavigateToPlayerCount();
+            });
+            ExitGameCommand = new RelayCommand(_ =>
+            {
+                SoundManager.PlaySound("click");
+                App.Current.Shutdown();
+            });
         }
 
         private void NavigateToPlayerCount()

@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using UnoGame.BackEnd.Interfaces;
+using UnoGame.WPFApp.Helper;
 using UnoGame.WPFApp.ViewModels;
 
 namespace UnoGame.WPFApp.Views
@@ -33,6 +34,9 @@ namespace UnoGame.WPFApp.Views
             {
                 vm.GameLog.CollectionChanged += GameLog_CollectionChanged;
             }
+
+            Loaded += GameView_Loaded;
+            Unloaded += GameView_Unloaded;
         }
 
         private void GameLog_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -47,6 +51,21 @@ namespace UnoGame.WPFApp.Views
                     }
                 }), DispatcherPriority.Background);
             }
+        }
+
+        private void GameView_Loaded(object? sender, RoutedEventArgs e)
+        {
+            SoundManager.PlayBacksound("bgm");
+        }
+
+        private void GameView_Unloaded(object? sender, RoutedEventArgs e)
+        {
+            SoundManager.StopBacksound();
+        }
+
+        private void MuteButton_Click(object? sender, RoutedEventArgs e)
+        {
+            SoundManager.IsMuted = !SoundManager.IsMuted;
         }
     }
 }

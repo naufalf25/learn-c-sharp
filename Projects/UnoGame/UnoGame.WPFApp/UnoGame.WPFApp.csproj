@@ -65,6 +65,12 @@
     <None Remove="Resources\Card\Y9.png" />
     <None Remove="Resources\Card\YR.png" />
     <None Remove="Resources\Card\YS.png" />
+    <None Remove="Resources\Sound\action_card.wav" />
+    <None Remove="Resources\Sound\bgm.mp3" />
+    <None Remove="Resources\Sound\card_flip.wav" />
+    <None Remove="Resources\Sound\click.wav" />
+    <None Remove="Resources\Sound\draw_card.wav" />
+    <None Remove="Resources\Sound\uno_call.wav" />
   </ItemGroup>
 
   <ItemGroup>
@@ -241,6 +247,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Card\YS.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Sound\action_card.wav">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Sound\bgm.mp3">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Sound\card_flip.wav">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Sound\click.wav">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Sound\draw_card.wav">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Sound\uno_call.wav">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

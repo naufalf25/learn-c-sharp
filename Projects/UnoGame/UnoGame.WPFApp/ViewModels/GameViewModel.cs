@@ -7,6 +7,7 @@ using UnoGame.BackEnd.Models;
 using UnoGame.WPFApp.Commands;
 using System.Windows;
 using System.Diagnostics;
+using UnoGame.WPFApp.Helper;
 
 namespace UnoGame.WPFApp.ViewModels
 {
@@ -26,6 +27,8 @@ namespace UnoGame.WPFApp.ViewModels
         private bool _isStackedActive;
         private CardColor _currentColor;
         private bool _isChoosingWildColor;
+        private bool _isReversed = false;
+        private bool _isBacksoundMuted = false;
 
         public ObservableCollection<CardDisplay> PlayerHand { get; } = [];
         public ObservableCollection<string> GameLog { get; } = [];
@@ -131,6 +134,24 @@ namespace UnoGame.WPFApp.ViewModels
                 OnPropertyChanged(nameof(CalledUnoButton));
             }
         }
+        public bool IsReversed
+        {
+            get => _isReversed;
+            set
+            {
+                _isReversed = value;
+                OnPropertyChanged(nameof(IsReversed));
+            }
+        }
+        public bool IsBacksoundMuted
+        {
+            get => _isBacksoundMuted;
+            set
+            {
+                _isBacksoundMuted = value;
+                OnPropertyChanged(nameof(IsBacksoundMuted));
+            }
+        }
 
         public ICommand PlayCardCommand { get; }
         public ICommand DrawCardCommand { get; }
@@ -138,6 +159,7 @@ namespace UnoGame.WPFApp.ViewModels
         public ICommand ReadyCommand { get; }
         public ICommand TakeDrawCommand { get; }
         public ICommand CallUnoCommand { get; }
+        public ICommand MuteBacksoundCommand { get; }
 
         public GameViewModel(MainWindow mainWindow, List<IPlayer> players)
         {
@@ -156,6 +178,9 @@ namespace UnoGame.WPFApp.ViewModels
             CurrentColor = _gameController.DeclaredCardColor();
             DrawCardCount = _gameController.GetRemainingCardsInDeck();
             DiscardPileCount = _gameController.GetCardsOnTable();
+            OverlayNextPlayer = Visibility.Visible;
+            IsBacksoundMuted = SoundManager.IsMuted;
+            OnPropertyChanged(nameof(OverlayNextPlayer));
 
             _gameController.OnGameAction += (string payload) =>
             {
@@ -173,6 +198,8 @@ namespace UnoGame.WPFApp.ViewModels
             };
 
             PlayCardCommand = new RelayCommand(cardObj => {
+                SoundManager.PlaySound("card_flip");
+
                 if (cardObj is ICard card)
                 {
                     var match = PlayerHand.FirstOrDefault(c => c.Card == card);
@@ -195,6 +222,7 @@ namespace UnoGame.WPFApp.ViewModels
             });
 
             DrawCardCommand = new RelayCommand(_ => {
+                SoundManager.PlaySound("draw_card");
                 _gameController.DrawCard(CurrentPlayer);
                 DrawCardCount = _gameController.GetRemainingCardsInDeck();
                 LoadPlayerHand();
@@ -204,6 +232,7 @@ namespace UnoGame.WPFApp.ViewModels
 
             PickColorCommand = new RelayCommand(colorObj =>
             {
+                SoundManager.PlaySound("click");
                 if (colorObj is string colorName && Enum.TryParse<CardColor>(colorName, true, out CardColor color))
                 {
                     if (_pendingWildCard != null)
@@ -223,11 +252,13 @@ namespace UnoGame.WPFApp.ViewModels
 
             ReadyCommand = new RelayCommand(_ =>
             {
+                SoundManager.PlaySound("click");
                 OverlayNextPlayer = Visibility.Hidden;
             });
 
             TakeDrawCommand = new RelayCommand(_ =>
             {
+                SoundManager.PlaySound("draw_card");
                 GameLog.Add($"[{DateTime.Now:T}] {CurrentPlayer.Name} choose to take the draw instead of countering");
                 _gameController.HandleStackableDraw(null, CurrentPlayer, false);
                 IsStackedActive = false;
@@ -241,9 +272,12 @@ namespace UnoGame.WPFApp.ViewModels
             {
                 if (_gameController.GetPlayerHand(CurrentPlayer).Count == 1)
                 {
+                    SoundManager.PlaySound("uno_call");
                     _gameController.CallUno(CurrentPlayer);
                 }
             });
+
+            MuteBacksoundCommand = new RelayCommand(_ => IsBacksoundMuted = !IsBacksoundMuted);
         }
         
         private void PlayCard(ICard card)
@@ -260,6 +294,7 @@ namespace UnoGame.WPFApp.ViewModels
                 IsStackedActive = _gameController.IsStackedActive;
                 CenterTable = Visibility.Visible;
                 OverlayNextPlayer = Visibility.Visible;
+                IsReversed = _gameController.IsReversed();
                 OnPropertyChanged(nameof(OverlayNextPlayer));
                 OnPropertyChanged(nameof(CurrentPlayer));
                 OnPropertyChanged(nameof(TopCard));
@@ -267,6 +302,7 @@ namespace UnoGame.WPFApp.ViewModels
                 OnPropertyChanged(nameof(CurrentColor));
                 OnPropertyChanged(nameof(CenterTable));
                 OnPropertyChanged(nameof(IsStackedActive));
+                OnPropertyChanged(nameof(IsReversed));
 
                 HandleStackedCard();
                 UpdatePlayerCards();
