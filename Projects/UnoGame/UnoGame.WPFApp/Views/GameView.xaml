@@ -168,7 +168,7 @@
                     <TextBlock Text="{Binding IsReversed, Converter={StaticResource DirectionConverter}}" FontFamily="Bahnschrift" FontSize="16" Foreground="LightBlue" FontWeight="DemiBold" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,5">
-                    <TextBlock Text="Direction: " Foreground="White" FontFamily="Bahnschrift" FontSize="16" />
+                    <TextBlock Text="Color: " Foreground="White" FontFamily="Bahnschrift" FontSize="16" />
                     <TextBlock Text="{Binding CurrentColor}" FontFamily="Bahnschrift" FontSize="16" Foreground="{Binding CurrentColor, Converter={StaticResource ColorToBrushConverter}}" FontWeight="DemiBold" />
                 </StackPanel>
             </StackPanel>
