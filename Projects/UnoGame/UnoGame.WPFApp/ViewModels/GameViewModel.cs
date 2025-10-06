@@ -180,7 +180,6 @@ namespace UnoGame.WPFApp.ViewModels
             DiscardPileCount = _gameController.GetCardsOnTable();
             OverlayNextPlayer = Visibility.Visible;
             IsBacksoundMuted = SoundManager.IsMuted;
-            OnPropertyChanged(nameof(OverlayNextPlayer));
 
             _gameController.OnGameAction += (string payload) =>
             {
@@ -252,7 +251,6 @@ namespace UnoGame.WPFApp.ViewModels
 
             ReadyCommand = new RelayCommand(_ =>
             {
-                SoundManager.PlaySound("click");
                 OverlayNextPlayer = Visibility.Hidden;
             });
 

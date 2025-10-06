@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,7 +56,8 @@ namespace UnoGame.WPFApp.Views
 
         private void GameView_Loaded(object? sender, RoutedEventArgs e)
         {
-            SoundManager.PlayBacksound("bgm");
+            SoundManager.PlaySound("uno_call");
+            SoundManager.PlayBacksound();
         }
 
         private void GameView_Unloaded(object? sender, RoutedEventArgs e)

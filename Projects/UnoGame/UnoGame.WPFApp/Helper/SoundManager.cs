@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Text;
@@ -10,7 +12,7 @@ namespace UnoGame.WPFApp.Helper
 {
     internal class SoundManager
     {
-        private static MediaPlayer _bgmPlayer;
+        private static MediaPlayer? _bgmPlayer;
         private static bool _isMuted = false;
 
         public static bool IsMuted
@@ -19,8 +21,7 @@ namespace UnoGame.WPFApp.Helper
             set
             {
                 _isMuted = value;
-                if (_bgmPlayer != null)
-                    _bgmPlayer.IsMuted = true;
+                _bgmPlayer?.IsMuted = value;
             }
         }
 
@@ -28,33 +29,33 @@ namespace UnoGame.WPFApp.Helper
         {
             try
             {
-                var uri = $"pack://application:,,,/Resources/Sound/{soundFileName}.wav";
-                using var stream = App.GetResourceStream(new Uri(uri))?.Stream;
-                if (stream != null)
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Sound", $"{soundFileName}.wav");
+                if (File.Exists(path))
                 {
-                    var player = new SoundPlayer(stream);
+                    Debug.WriteLine(path);
+                    var player = new SoundPlayer(path);
                     player.Play();
+                }
+                else
+                {
+                    Debug.WriteLine($"[Sound Manager] File not found: {path}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Sound Manager] Error playing sound {soundFileName}: {ex.Message}");
+                Debug.WriteLine($"[Sound Manager] Error playing sound {soundFileName}: {ex.Message}");
             }
         }
 
-        public static void PlayBacksound(string soundFileName)
+        public static void PlayBacksound()
         {
             _bgmPlayer ??= new MediaPlayer();
-
             try
             {
-                _bgmPlayer.Open(new Uri($"pack://application:,,,/Resources/Sound/{soundFileName}.mp3"));
-                _bgmPlayer.Volume = 1;
-                _bgmPlayer.MediaEnded += (s, e) =>
-                {
-                    _bgmPlayer.Position = TimeSpan.Zero;
-                    _bgmPlayer.Play();
-                };
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Sound", "bgm.mp3");
+                _bgmPlayer.Open(new Uri(path));
+                _bgmPlayer.Volume = 0.3;
+                _bgmPlayer.MediaEnded += new EventHandler(MediaPlayerEnded);
 
                 if (!_isMuted)
                 {
@@ -63,7 +64,7 @@ namespace UnoGame.WPFApp.Helper
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error playing BGM {soundFileName}: {ex.Message}");
+                Debug.WriteLine($"Error playing BGM: {ex.Message}");
             }
         }
 
@@ -75,7 +76,13 @@ namespace UnoGame.WPFApp.Helper
 
         public static void StopBacksound()
         {
-            _bgmPlayer.Stop();
+            _bgmPlayer?.Stop();
+        }
+
+        private static void MediaPlayerEnded(object? sender, EventArgs e)
+        {
+            _bgmPlayer.Position = TimeSpan.Zero;
+            _bgmPlayer.Play();
         }
     }
 }

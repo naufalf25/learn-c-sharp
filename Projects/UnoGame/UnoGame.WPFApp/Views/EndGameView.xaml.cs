@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UnoGame.BackEnd.Interfaces;
+using UnoGame.WPFApp.Helper;
 using UnoGame.WPFApp.ViewModels;
 
 namespace UnoGame.WPFApp.Views
@@ -26,6 +28,15 @@ namespace UnoGame.WPFApp.Views
         {
             InitializeComponent();
             DataContext = new EndGameViewModel(mainWindow, winner);
+
+            Loaded += EndGameView_Loaded;
+        }
+
+        private void EndGameView_Loaded(object? sender, RoutedEventArgs e)
+        {
+            SoundManager.PlaySound("uno_call");
+            Task.Delay(1000);
+            SoundManager.PlaySound("winner");
         }
     }
 }

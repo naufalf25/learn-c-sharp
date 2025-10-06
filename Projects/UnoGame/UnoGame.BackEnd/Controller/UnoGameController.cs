@@ -341,7 +341,8 @@ public class UnoGameController
         _isReversed = !_isReversed;
 
         OnGameAction?.Invoke("Direction changed!");
-        NextPlayer();
+        if (_players.Count != 2)
+            NextPlayer();
     }
 
     private void ExecuteDrawTwo()
