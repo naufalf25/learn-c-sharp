@@ -11,37 +11,5 @@
     </Window.Background>
     <Grid Width="Auto" Height="Auto">
         <ContentControl x:Name="MainContent" />
-        <Grid x:Name="PlayerSetup" Visibility="Hidden">
-            <Grid x:Name="PlayerSetup_SetTotalPlayer" Margin="486,105,486,105" Visibility="Hidden">
-                <TextBlock Text="Set Total Player" FontFamily="Bahnschrift" FontSize="30" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,130,0,0" />
-                <ComboBox x:Name="SetTotalPlayer" Text="Set Total Player" FontSize="20" HorizontalAlignment="Center" Margin="0,200,0,0" VerticalAlignment="Top" Width="200">
-                    <ComboBoxItem Content="2 (Two)" />
-                    <ComboBoxItem Content="3 (Three)" />
-                    <ComboBoxItem Content="4 (Four)" />
-                </ComboBox>
-                <Button x:Name="ButtonSetTotalPlayer" Content="Confirm" FontSize="30" FontFamily="Bahnschrift" FontWeight="DemiBold" Background="White" Width="200" Height="50" Margin="0,200,0,0" />
-            </Grid>
-            <Grid x:Name="PlayerSetup_SetPlayerName" Margin="280,90,280,90">
-                <TextBlock Text="Set Player Name" FontSize="25" FontWeight="DemiBold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" />
-                <Grid x:Name="PlayerNames" Margin="10,120,0,100"></Grid>
-                <Button Content="Confirm" FontFamily="Bahnschrift" FontSize="22" FontWeight="DemiBold" Width="120" Height="50" Margin="343,455,343,27"></Button>
-            </Grid>
-        </Grid>
-        <Grid x:Name="Game" Visibility="Hidden">
-            <Grid x:Name="CenterGrid" Margin="300,230,300,230">
-                <Grid x:Name="Deck" Margin="79,30,333,30">
-                    <TextBlock x:Name="DeckCount" Text="96" FontSize="45" Margin="163,57,42,0" VerticalAlignment="Top" FontWeight="DemiBold" Foreground="White" FontFamily="Bahnschrift" />
-                    <TextBlock Text="cards" FontSize="30" FontWeight="Medium" Foreground="White" FontFamily="Bahnschrift" Margin="150,111,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <Image Source="Resources/Card/Uno.png" Width="100" Margin="40,0,0,0" HorizontalAlignment="Left" />
-                </Grid>
-                <Grid x:Name="TopCard" Margin="450,50,110,50">
-                    <Image Source="Resources/Card/Uno.png" Width="100" />
-                </Grid>
-            </Grid>
-            <Grid x:Name="TopCardGrid" Margin="350,50,350,520"></Grid>
-            <Grid x:Name="BottomCardGrid" Margin="350,520,350,50"></Grid>
-            <Grid x:Name="LeftCardGrid" Margin="50,100,1150,100"></Grid>
-            <Grid x:Name="RightCardGrid" Margin="1150, 100, 50, 100"></Grid>
-        </Grid>
     </Grid>
 </Window>
