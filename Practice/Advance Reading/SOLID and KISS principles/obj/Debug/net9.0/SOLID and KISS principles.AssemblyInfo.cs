@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SOLID and KISS principles")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c325b6857f6fd92ea4b4239a823f0d45f9a81390")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+acdb26af5b0cc6ca34499cdb8296262304e65b15")]
 [assembly: System.Reflection.AssemblyProductAttribute("SOLID and KISS principles")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SOLID and KISS principles")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
