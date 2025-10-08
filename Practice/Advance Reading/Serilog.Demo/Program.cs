@@ -1,11 +1,13 @@
 using Serilog;
 using Serilog.Demo.Services;
 using Serilog.Events;
+using Serilog.Formatting.Json;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
     .Enrich.FromLogContext()
     .WriteTo.Console()
+    .WriteTo.File(new JsonFormatter(), "logs/serilog-demo-.json")
     .CreateBootstrapLogger();
 
 try
@@ -20,7 +22,8 @@ try
                      .ReadFrom.Services(services)
                      .Enrich.FromLogContext()
                      .Enrich.WithProperty("Application", "Serilog.Demo")
-                     .Enrich.WithProperty("Environtment", context.HostingEnvironment.EnvironmentName);
+                     .Enrich.WithProperty("Environtment", context.HostingEnvironment.EnvironmentName)
+                     .WriteTo.File(new JsonFormatter(), "logs/serilog-demo-.json");
     });
 
     builder.Services.AddControllers();
