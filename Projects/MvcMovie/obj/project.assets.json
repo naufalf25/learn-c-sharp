@@ -8007,23 +8007,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Naufal\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\opalf\\.nuget\\packages\\": {},
+    "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Naufal\\Documents\\learn-c-sharp\\Projects\\MvcMovie\\MvcMovie.csproj",
-      "projectName": "MvcMovie",
-      "projectPath": "C:\\Users\\Naufal\\Documents\\learn-c-sharp\\Projects\\MvcMovie\\MvcMovie.csproj",
-      "packagesPath": "C:\\Users\\Naufal\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Naufal\\Documents\\learn-c-sharp\\Projects\\MvcMovie\\obj\\",
+      "projectUniqueName": "D:\\Project\\learn-c-sharp\\Projects\\MVCMovie\\MVCMovie.csproj",
+      "projectName": "MVCMovie",
+      "projectPath": "D:\\Project\\learn-c-sharp\\Projects\\MVCMovie\\MVCMovie.csproj",
+      "packagesPath": "C:\\Users\\opalf\\.nuget\\packages\\",
+      "outputPath": "D:\\Project\\learn-c-sharp\\Projects\\MVCMovie\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Naufal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\opalf\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -8100,7 +8100,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
