@@ -15,13 +15,13 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<IUser?> AuthenticateUserAsync(string email, string password)
+    public async Task<User?> AuthenticateUserAsync(string email, string password)
     {
         var hasher = new PasswordHasher<IUser>();
         return await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == hasher.HashPassword(u, password));
     }
 
-    public async Task<IUser> RegisterUserAsync(User user)
+    public async Task<User> RegisterUserAsync(User user)
     {
         user.CreatedAt = DateTime.UtcNow;
         _context.Users.Add(user);

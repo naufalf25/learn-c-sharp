@@ -1,12 +1,13 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BookManagementAPI.Interfaces;
 using BookManagementAPI.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BookManagementAPI.Services;
 
-public class JwtAuthService
+public class JwtAuthService : IJwtAuthService
 {
     private readonly IConfiguration _configuration;
 
