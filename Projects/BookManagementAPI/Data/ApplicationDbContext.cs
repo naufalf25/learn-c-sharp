@@ -9,6 +9,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     public new DbSet<User> Users { get; set; } = default!;
+    public DbSet<Book> Books { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
