@@ -2,7 +2,7 @@ namespace BookManagementAPI.DTOs;
 
 public class RegisterUserDTO
 {
-    public string Name { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;
 
@@ -20,8 +20,8 @@ public class LoginUserDTO
 
 public class UserProfileDTO
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public string Id { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
@@ -30,7 +30,7 @@ public class UserProfileDTO
 public class AuthResponseDTO
 {
     public string Token { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public DateTime ExpiredAt { get; set; }

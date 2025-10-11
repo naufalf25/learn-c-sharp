@@ -4,5 +4,5 @@ namespace BookManagementAPI.Interfaces;
 
 public interface IJwtAuthService
 {
-    public string GenerateToken(User user);
+    public string GenerateToken(User user, string role);
 }

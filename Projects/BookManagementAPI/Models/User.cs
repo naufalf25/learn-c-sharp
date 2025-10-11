@@ -5,7 +5,6 @@ namespace BookManagementAPI.Models;
 
 public class User : IdentityUser, IUser
 {
-    public string Name { get; set; } = string.Empty;
-    public string Role { get; set; } = "user";
+    public string FullName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
 }

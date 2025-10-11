@@ -7,7 +7,7 @@ public class RegisterUserDTOValidator : AbstractValidator<RegisterUserDTO>
 {
     public RegisterUserDTOValidator()
     {
-        RuleFor(user => user.Name)
+        RuleFor(user => user.FullName)
             .NotEmpty().WithMessage("Name is required")
             .Length(2, 50).WithMessage("Name must between 2 and 100 characters long")
             .Matches(@"^[a-zA-Z\s]+$").WithMessage("Name can only contain letters and spaces");

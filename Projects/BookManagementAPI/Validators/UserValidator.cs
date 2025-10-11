@@ -13,7 +13,7 @@ public class UserValidator : AbstractValidator<User>
             .EmailAddress()
             .WithMessage("Please enter a valid email address");
 
-        RuleFor(user => user.Name)
+        RuleFor(user => user.FullName)
             .NotEmpty()
             .WithMessage("Name is required")
             .Length(2, 100)
@@ -21,22 +21,10 @@ public class UserValidator : AbstractValidator<User>
             .Matches(@"^[a-zA-Z\s]+$")
             .WithMessage("Name can only contain letters and spaces");
 
-        RuleFor(user => user.Role)
-            .NotEmpty()
-            .WithMessage("Role is required")
-            .Must(BeValidRole)
-            .WithMessage("Role must be 'admin' or 'user'");
-
         RuleFor(user => user.CreatedAt)
             .NotEmpty()
             .WithMessage("CreatedAt is required")
             .LessThanOrEqualTo(DateTime.Today)
             .WithMessage("CreatedAt cannot in the future");
-    }
-
-    private bool BeValidRole(string role)
-    {
-        var validRoles = new[] { "admin", "user" };
-        return validRoles.Contains(role, StringComparer.OrdinalIgnoreCase);
     }
 }
